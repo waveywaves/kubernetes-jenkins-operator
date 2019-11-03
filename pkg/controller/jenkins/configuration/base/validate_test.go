@@ -14,7 +14,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"k8s.io/api/core/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
@@ -350,7 +349,7 @@ func TestValidateJenkinsMasterPodEnvs(t *testing.T) {
 				Master: v1alpha2.JenkinsMaster{
 					Containers: []v1alpha2.Container{
 						{
-							Env: []v1.EnvVar{
+							Env: []corev1.EnvVar{
 								{
 									Name:  "SOME_VALUE",
 									Value: "",
@@ -377,7 +376,7 @@ func TestValidateJenkinsMasterPodEnvs(t *testing.T) {
 				Master: v1alpha2.JenkinsMaster{
 					Containers: []v1alpha2.Container{
 						{
-							Env: []v1.EnvVar{
+							Env: []corev1.EnvVar{
 								{
 									Name:  "JENKINS_HOME",
 									Value: "",
@@ -405,7 +404,7 @@ func TestValidateJenkinsMasterPodEnvs(t *testing.T) {
 				Master: v1alpha2.JenkinsMaster{
 					Containers: []v1alpha2.Container{
 						{
-							Env: []v1.EnvVar{
+							Env: []corev1.EnvVar{
 								{
 									Name:  constants.JavaOpsVariableName,
 									Value: "-Djenkins.install.runSetupWizard=false",
@@ -429,7 +428,7 @@ func TestValidateJenkinsMasterPodEnvs(t *testing.T) {
 				Master: v1alpha2.JenkinsMaster{
 					Containers: []v1alpha2.Container{
 						{
-							Env: []v1.EnvVar{
+							Env: []corev1.EnvVar{
 								{
 									Name:  constants.JavaOpsVariableName,
 									Value: "-Djava.awt.headless=true",
@@ -454,7 +453,7 @@ func TestValidateReservedVolumes(t *testing.T) {
 		jenkins := v1alpha2.Jenkins{
 			Spec: v1alpha2.JenkinsSpec{
 				Master: v1alpha2.JenkinsMaster{
-					Volumes: []v1.Volume{
+					Volumes: []corev1.Volume{
 						{
 							Name: "not-used-name",
 						},
@@ -472,7 +471,7 @@ func TestValidateReservedVolumes(t *testing.T) {
 		jenkins := v1alpha2.Jenkins{
 			Spec: v1alpha2.JenkinsSpec{
 				Master: v1alpha2.JenkinsMaster{
-					Volumes: []v1.Volume{
+					Volumes: []corev1.Volume{
 						{
 							Name: resources.JenkinsHomeVolumeName,
 						},
@@ -506,14 +505,14 @@ func TestValidateContainerVolumeMounts(t *testing.T) {
 		jenkins := v1alpha2.Jenkins{
 			Spec: v1alpha2.JenkinsSpec{
 				Master: v1alpha2.JenkinsMaster{
-					Volumes: []v1.Volume{
+					Volumes: []corev1.Volume{
 						{
 							Name: "example",
 						},
 					},
 					Containers: []v1alpha2.Container{
 						{
-							VolumeMounts: []v1.VolumeMount{
+							VolumeMounts: []corev1.VolumeMount{
 								{
 									Name:      "example",
 									MountPath: "/test",
@@ -534,14 +533,14 @@ func TestValidateContainerVolumeMounts(t *testing.T) {
 		jenkins := v1alpha2.Jenkins{
 			Spec: v1alpha2.JenkinsSpec{
 				Master: v1alpha2.JenkinsMaster{
-					Volumes: []v1.Volume{
+					Volumes: []corev1.Volume{
 						{
 							Name: "example",
 						},
 					},
 					Containers: []v1alpha2.Container{
 						{
-							VolumeMounts: []v1.VolumeMount{
+							VolumeMounts: []corev1.VolumeMount{
 								{
 									Name:      "example",
 									MountPath: "", // empty
@@ -564,7 +563,7 @@ func TestValidateContainerVolumeMounts(t *testing.T) {
 				Master: v1alpha2.JenkinsMaster{
 					Containers: []v1alpha2.Container{
 						{
-							VolumeMounts: []v1.VolumeMount{
+							VolumeMounts: []corev1.VolumeMount{
 								{
 									Name:      "missing-volume",
 									MountPath: "/test",
