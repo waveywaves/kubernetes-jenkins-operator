@@ -38,6 +38,23 @@ const (
 	fetchAllPlugins = 1
 )
 
+var (
+	allowedSecurityContext = corev1.SecurityContext{
+		Capabilities: &corev1.Capabilities{
+			Add:  []corev1.Capability{},
+			Drop: []corev1.Capability{"MKNOD"},
+		},
+		Privileged:               nil,
+		SELinuxOptions:           nil,
+		RunAsUser:                nil,
+		RunAsNonRoot:             nil,
+		ReadOnlyRootFilesystem:   nil,
+		AllowPrivilegeEscalation: nil,
+		RunAsGroup:               nil,
+		ProcMount:                nil,
+	}
+)
+
 // ReconcileJenkinsBaseConfiguration defines values required for Jenkins base configuration
 type ReconcileJenkinsBaseConfiguration struct {
 	configuration.Configuration
@@ -513,6 +530,7 @@ func (r *ReconcileJenkinsBaseConfiguration) checkForPodRecreation(currentJenkins
 			r.Configuration.Jenkins.Status.OperatorVersion, version.Version))
 	}
 
+<<<<<<< HEAD
 	if !reflect.DeepEqual(r.Configuration.Jenkins.Spec.Master.SecurityContext, currentJenkinsMasterPod.Spec.SecurityContext) {
 		messages = append(messages, fmt.Sprintf("Jenkins pod security context has changed"))
 		verbose = append(verbose, fmt.Sprintf("Jenkins pod security context has changed, actual '%+v' required '%+v'",
@@ -531,6 +549,19 @@ func (r *ReconcileJenkinsBaseConfiguration) checkForPodRecreation(currentJenkins
 			currentJenkinsMasterPod.Spec.NodeSelector, r.Configuration.Jenkins.Spec.Master.NodeSelector))
 	}
 
+=======
+	if currentJenkinsMasterPod.Status.Phase == corev1.PodFailed ||
+		currentJenkinsMasterPod.Status.Phase == corev1.PodSucceeded ||
+		currentJenkinsMasterPod.Status.Phase == corev1.PodUnknown {
+		messages = append(messages, fmt.Sprintf("Invalid Jenkins pod phase '%+v', recreating pod", currentJenkinsMasterPod.Status))
+	}
+
+	if !reflect.DeepEqual(r.Configuration.Jenkins.Spec.Master.SecurityContext, currentJenkinsMasterPod.Spec.SecurityContext) && !reflect.DeepEqual(allowedSecurityContext, currentJenkinsMasterPod.Spec.SecurityContext) {
+		messages = append(messages, fmt.Sprintf("Jenkins pod security context has changed, actual '%+v' required '%+v', recreating pod",
+			currentJenkinsMasterPod.Spec.SecurityContext, r.Configuration.Jenkins.Spec.Master.SecurityContext))
+	}
+
+>>>>>>> Updated Validation to have better validation on a pod level and not a container level to provide flexibility for admission controllers to make changes
 	if len(r.Configuration.Jenkins.Spec.Master.Annotations) > 0 &&
 		!reflect.DeepEqual(r.Configuration.Jenkins.Spec.Master.Annotations, currentJenkinsMasterPod.ObjectMeta.Annotations) {
 		messages = append(messages, "Jenkins pod annotations have changed")
@@ -626,10 +657,13 @@ func (r *ReconcileJenkinsBaseConfiguration) compareContainers(expected corev1.Co
 		messages = append(messages, "Resources have changed")
 		verbose = append(verbose, fmt.Sprintf("Resources have changed to '%+v' in container '%s'", expected.Resources, expected.Name))
 	}
+<<<<<<< HEAD
 	if !reflect.DeepEqual(expected.SecurityContext, actual.SecurityContext) {
 		messages = append(messages, "Security context has changed")
 		verbose = append(verbose, fmt.Sprintf("Security context has changed to '%+v' in container '%s'", expected.SecurityContext, expected.Name))
 	}
+=======
+>>>>>>> Updated Validation to have better validation on a pod level and not a container level to provide flexibility for admission controllers to make changes
 	if !reflect.DeepEqual(expected.WorkingDir, actual.WorkingDir) {
 		messages = append(messages, "Working directory has changed")
 		verbose = append(verbose, fmt.Sprintf("Working directory has changed to '%+v' in container '%s'", expected.WorkingDir, expected.Name))

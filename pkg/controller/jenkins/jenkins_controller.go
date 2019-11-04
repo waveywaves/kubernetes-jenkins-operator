@@ -324,6 +324,19 @@ func (r *ReconcileJenkins) buildLogger(jenkinsName string) logr.Logger {
 	return log.Log.WithValues("cr", jenkinsName)
 }
 
+func GetSecurityContext(jenkins *v1alpha2.Jenkins) *corev1.PodSecurityContext {
+	var id int64 = 1000
+	securityContext := corev1.PodSecurityContext{
+		RunAsUser: &id,
+		FSGroup:   &id,
+	}
+
+	if jenkins.Spec.Master.SecurityContext != nil {
+		return jenkins.Spec.Master.SecurityContext
+	}
+	return &securityContext
+}
+
 func (r *ReconcileJenkins) setDefaults(jenkins *v1alpha2.Jenkins, logger logr.Logger) error {
 	changed := false
 
@@ -470,12 +483,7 @@ func (r *ReconcileJenkins) setDefaults(jenkins *v1alpha2.Jenkins, logger logr.Lo
 	if jenkins.Spec.Master.SecurityContext == nil {
 		logger.Info("Setting default Jenkins master security context")
 		changed = true
-		var id int64 = 1000
-		securityContext := corev1.PodSecurityContext{
-			RunAsUser: &id,
-			FSGroup:   &id,
-		}
-		jenkins.Spec.Master.SecurityContext = &securityContext
+		jenkins.Spec.Master.SecurityContext = GetSecurityContext(jenkins)
 	}
 
 	if changed {

@@ -50,6 +50,16 @@ func buildPodTypeMeta() metav1.TypeMeta {
 	}
 }
 
+// GetJenkinsHomePath fetches the Home Path for Jenkins
+func GetJenkinsHomePath(jenkins *v1alpha2.Jenkins) string {
+	for _, envVar := range jenkins.Spec.Master.Containers[0].Env {
+		if envVar.Name == "JENKINS_HOME" {
+			return envVar.Value
+		}
+	}
+	return jenkinsHomePath
+}
+
 // GetJenkinsMasterContainerBaseCommand returns default Jenkins master container command
 func GetJenkinsMasterContainerBaseCommand() []string {
 	return []string{
@@ -63,9 +73,9 @@ func GetJenkinsMasterContainerBaseCommand() []string {
 // GetJenkinsMasterContainerBaseEnvs returns Jenkins master pod envs required by operator
 func GetJenkinsMasterContainerBaseEnvs(jenkins *v1alpha2.Jenkins) []corev1.EnvVar {
 	envVars := []corev1.EnvVar{
-		{
+		corev1.EnvVar{
 			Name:  "JENKINS_HOME",
-			Value: jenkinsHomePath,
+			Value: GetJenkinsHomePath(jenkins),
 		},
 	}
 
@@ -163,7 +173,7 @@ func GetJenkinsMasterContainerBaseVolumeMounts(jenkins *v1alpha2.Jenkins) []core
 	volumeMounts := []corev1.VolumeMount{
 		{
 			Name:      JenkinsHomeVolumeName,
-			MountPath: jenkinsHomePath,
+			MountPath: GetJenkinsHomePath(jenkins),
 			ReadOnly:  false,
 		},
 		{
