@@ -334,7 +334,7 @@ func TestReconcileJenkinsBaseConfiguration_validateImagePullSecrets(t *testing.T
 			Client:  fakeClient,
 			Jenkins: &jenkins,
 		}, logf.ZapLogger(false), false, false, nil)
-
+ 
 		got, _ := baseReconcileLoop.validateImagePullSecrets()
 
 		assert.Equal(t, got, []string{"Secret 'test-ref' defined in spec.master.imagePullSecrets doesn't have 'docker-server' key."})
@@ -369,34 +369,6 @@ func TestValidateJenkinsMasterPodEnvs(t *testing.T) {
 		}, logf.ZapLogger(false), false, false, nil)
 		got := baseReconcileLoop.validateJenkinsMasterPodEnvs()
 		assert.Nil(t, got)
-	})
-	t.Run("override JENKINS_HOME env", func(t *testing.T) {
-		jenkins := v1alpha2.Jenkins{
-			Spec: v1alpha2.JenkinsSpec{
-				Master: v1alpha2.JenkinsMaster{
-					Containers: []v1alpha2.Container{
-						{
-							Env: []corev1.EnvVar{
-								{
-									Name:  "JENKINS_HOME",
-									Value: "",
-								},
-								{
-									Name:  constants.JavaOpsVariableName,
-									Value: validJenkinsOps,
-								},
-							},
-						},
-					},
-				},
-			},
-		}
-		baseReconcileLoop := New(configuration.Configuration{
-			Jenkins: &jenkins,
-		}, logf.ZapLogger(false), false, false, nil)
-		got := baseReconcileLoop.validateJenkinsMasterPodEnvs()
-
-		assert.Equal(t, got, []string{"Jenkins Master container env 'JENKINS_HOME' cannot be overridden"})
 	})
 	t.Run("missing -Djava.awt.headless=true in JAVA_OPTS env", func(t *testing.T) {
 		jenkins := v1alpha2.Jenkins{

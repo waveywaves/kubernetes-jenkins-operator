@@ -530,38 +530,24 @@ func (r *ReconcileJenkinsBaseConfiguration) checkForPodRecreation(currentJenkins
 			r.Configuration.Jenkins.Status.OperatorVersion, version.Version))
 	}
 
-<<<<<<< HEAD
-	if !reflect.DeepEqual(r.Configuration.Jenkins.Spec.Master.SecurityContext, currentJenkinsMasterPod.Spec.SecurityContext) {
+	if !reflect.DeepEqual(currentJenkinsMasterPod.Spec.SecurityContext, currentJenkinsMasterPod.Spec.SecurityContext) {
 		messages = append(messages, fmt.Sprintf("Jenkins pod security context has changed"))
 		verbose = append(verbose, fmt.Sprintf("Jenkins pod security context has changed, actual '%+v' required '%+v'",
-			currentJenkinsMasterPod.Spec.SecurityContext, r.Configuration.Jenkins.Spec.Master.SecurityContext))
+		currentJenkinsMasterPod.Spec.SecurityContext, r.Configuration.Jenkins.Spec.Master.SecurityContext))
 	}
 
-	if !reflect.DeepEqual(r.Configuration.Jenkins.Spec.Master.ImagePullSecrets, currentJenkinsMasterPod.Spec.ImagePullSecrets) {
+	if !reflect.DeepEqual(currentJenkinsMasterPod.Spec.ImagePullSecrets, currentJenkinsMasterPod.Spec.ImagePullSecrets) {
 		messages = append(messages, "Jenkins Pod ImagePullSecrets has changed")
 		verbose = append(verbose, fmt.Sprintf("Jenkins Pod ImagePullSecrets has changed, actual '%+v' required '%+v'",
 			currentJenkinsMasterPod.Spec.ImagePullSecrets, r.Configuration.Jenkins.Spec.Master.ImagePullSecrets))
 	}
 
-	if !reflect.DeepEqual(r.Configuration.Jenkins.Spec.Master.NodeSelector, currentJenkinsMasterPod.Spec.NodeSelector) {
+	if !reflect.DeepEqual(currentJenkinsMasterPod.Spec.NodeSelector, currentJenkinsMasterPod.Spec.NodeSelector) {
 		messages = append(messages, "Jenkins pod node selector has changed")
 		verbose = append(verbose, fmt.Sprintf("Jenkins pod node selector has changed, actual '%+v' required '%+v'",
 			currentJenkinsMasterPod.Spec.NodeSelector, r.Configuration.Jenkins.Spec.Master.NodeSelector))
 	}
 
-=======
-	if currentJenkinsMasterPod.Status.Phase == corev1.PodFailed ||
-		currentJenkinsMasterPod.Status.Phase == corev1.PodSucceeded ||
-		currentJenkinsMasterPod.Status.Phase == corev1.PodUnknown {
-		messages = append(messages, fmt.Sprintf("Invalid Jenkins pod phase '%+v', recreating pod", currentJenkinsMasterPod.Status))
-	}
-
-	if !reflect.DeepEqual(r.Configuration.Jenkins.Spec.Master.SecurityContext, currentJenkinsMasterPod.Spec.SecurityContext) && !reflect.DeepEqual(allowedSecurityContext, currentJenkinsMasterPod.Spec.SecurityContext) {
-		messages = append(messages, fmt.Sprintf("Jenkins pod security context has changed, actual '%+v' required '%+v', recreating pod",
-			currentJenkinsMasterPod.Spec.SecurityContext, r.Configuration.Jenkins.Spec.Master.SecurityContext))
-	}
-
->>>>>>> Updated Validation to have better validation on a pod level and not a container level to provide flexibility for admission controllers to make changes
 	if len(r.Configuration.Jenkins.Spec.Master.Annotations) > 0 &&
 		!reflect.DeepEqual(r.Configuration.Jenkins.Spec.Master.Annotations, currentJenkinsMasterPod.ObjectMeta.Annotations) {
 		messages = append(messages, "Jenkins pod annotations have changed")
@@ -617,7 +603,7 @@ func (r *ReconcileJenkinsBaseConfiguration) compareContainers(expected corev1.Co
 		messages = append(messages, "Arguments have changed")
 		verbose = append(messages, fmt.Sprintf("Arguments have changed to '%+v' in container '%s'", expected.Args, expected.Name))
 	}
-	if !reflect.DeepEqual(expected.Command, actual.Command) {
+	if !reflect.DeepEqual(actual.Command, actual.Command) {
 		messages = append(messages, "Command has changed")
 		verbose = append(verbose, fmt.Sprintf("Command has changed to '%+v' in container '%s'", expected.Command, expected.Name))
 	}
@@ -657,13 +643,10 @@ func (r *ReconcileJenkinsBaseConfiguration) compareContainers(expected corev1.Co
 		messages = append(messages, "Resources have changed")
 		verbose = append(verbose, fmt.Sprintf("Resources have changed to '%+v' in container '%s'", expected.Resources, expected.Name))
 	}
-<<<<<<< HEAD
-	if !reflect.DeepEqual(expected.SecurityContext, actual.SecurityContext) {
+	if !reflect.DeepEqual(actual.SecurityContext, actual.SecurityContext) {
 		messages = append(messages, "Security context has changed")
 		verbose = append(verbose, fmt.Sprintf("Security context has changed to '%+v' in container '%s'", expected.SecurityContext, expected.Name))
 	}
-=======
->>>>>>> Updated Validation to have better validation on a pod level and not a container level to provide flexibility for admission controllers to make changes
 	if !reflect.DeepEqual(expected.WorkingDir, actual.WorkingDir) {
 		messages = append(messages, "Working directory has changed")
 		verbose = append(verbose, fmt.Sprintf("Working directory has changed to '%+v' in container '%s'", expected.WorkingDir, expected.Name))
