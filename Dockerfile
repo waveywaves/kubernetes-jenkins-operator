@@ -1,7 +1,7 @@
-FROM docker:18.09
+FROM registry.access.redhat.com/ubi8/ubi-minimal
 
-ARG GO_VERSION
-ARG OPERATOR_SDK_VERSION
+ARG GO_VERSION=1.12.13
+ARG OPERATOR_SDK_VERSION=0.12.0
 ARG MINIKUBE_VERSION
 
 ARG GOPATH="/go"
@@ -9,22 +9,15 @@ ARG GOPATH="/go"
 RUN mkdir -p /go
 
 # Stage 1 - Install dependencies
-RUN apk update && \
-    apk add --no-cache \
+RUN microdnf install \
             curl \
-            python \
-            py-crcmod \
             bash \
-            libc6-compat \
-            openssh-client \
             git \
-            make \
-            gcc \
-            libc-dev \
-            git \
-            mercurial
+            tar \
+            make \ 
+            findutils
 
-RUN curl -O https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz && tar -xvf go$GO_VERSION.linux-amd64.tar.gz
+RUN curl -O https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz && tar -xvzf go$GO_VERSION.linux-amd64.tar.gz
 
 # Stage 2 - Install operator-sdk
 RUN echo $GOPATH/bin/operator-sdk
@@ -50,4 +43,4 @@ RUN mkdir -p /home/builder
 ENV DOCKER_TLS_VERIFY   1
 ENV DOCKER_CERT_PATH    /minikube/certs
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT bash
