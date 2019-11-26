@@ -17,6 +17,7 @@ RUN microdnf install \
             make \ 
             findutils
 
+
 RUN curl -O https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz && tar -xvzf go$GO_VERSION.linux-amd64.tar.gz
 
 # Stage 2 - Install operator-sdk
