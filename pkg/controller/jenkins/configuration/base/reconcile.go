@@ -35,7 +35,8 @@ import (
 )
 
 const (
-	fetchAllPlugins = 1
+	fetchAllPlugins         = 1
+	openshiftModeAnnotation = "jenkins.io/openshift-mode"
 )
 
 // ReconcileJenkinsBaseConfiguration defines values required for Jenkins base configuration
@@ -402,7 +403,7 @@ func (r *ReconcileJenkinsBaseConfiguration) ensureJenkinsMasterPod(meta metav1.O
 	currentJenkinsMasterPod, err := r.getJenkinsMasterPod()
 	if err != nil && errors.IsNotFound(err) {
 		jenkinsMasterPod := resources.NewJenkinsMasterPod(meta, r.Configuration.Jenkins)
-		if !reflect.DeepEqual(jenkinsMasterPod.Spec.Containers[0].Command, resources.GetJenkinsMasterContainerBaseCommand()) {
+		if !r.isOpenshift() && !reflect.DeepEqual(jenkinsMasterPod.Spec.Containers[0].Command, resources.GetJenkinsMasterContainerBaseCommand()) {
 			r.logger.Info(fmt.Sprintf("spec.master.containers[%s].command has been overridden make sure the command looks like: '%v', otherwise the operator won't configure default user and install plugins",
 				resources.JenkinsMasterContainerName, []string{"bash", "-c", fmt.Sprintf("%s/%s && <custom-command-here> && /sbin/tini -s -- /usr/local/bin/jenkins.sh",
 					resources.JenkinsScriptsVolumePath, resources.InitScriptName)}))
@@ -512,13 +513,13 @@ func (r *ReconcileJenkinsBaseConfiguration) checkForPodRecreation(currentJenkins
 			r.Configuration.Jenkins.Status.OperatorVersion, version.Version))
 	}
 
-	if !reflect.DeepEqual(r.Configuration.Jenkins.Spec.Master.SecurityContext, currentJenkinsMasterPod.Spec.SecurityContext) {
+	if !r.isOpenshift() && !reflect.DeepEqual(r.Configuration.Jenkins.Spec.Master.SecurityContext, currentJenkinsMasterPod.Spec.SecurityContext)  {
 		messages = append(messages, fmt.Sprintf("Jenkins pod security context has changed"))
 		verbose = append(verbose, fmt.Sprintf("Jenkins pod security context has changed, actual '%+v' required '%+v'",
 			currentJenkinsMasterPod.Spec.SecurityContext, r.Configuration.Jenkins.Spec.Master.SecurityContext))
 	}
 
-	if !reflect.DeepEqual(r.Configuration.Jenkins.Spec.Master.ImagePullSecrets, currentJenkinsMasterPod.Spec.ImagePullSecrets) {
+	if !r.isOpenshift() && !reflect.DeepEqual(r.Configuration.Jenkins.Spec.Master.ImagePullSecrets, currentJenkinsMasterPod.Spec.ImagePullSecrets)  {
 		messages = append(messages, "Jenkins Pod ImagePullSecrets has changed")
 		verbose = append(verbose, fmt.Sprintf("Jenkins Pod ImagePullSecrets has changed, actual '%+v' required '%+v'",
 			currentJenkinsMasterPod.Spec.ImagePullSecrets, r.Configuration.Jenkins.Spec.Master.ImagePullSecrets))
@@ -609,7 +610,7 @@ func (r *ReconcileJenkinsBaseConfiguration) compareContainers(expected corev1.Co
 		messages = append(messages, "Lifecycle has changed")
 		verbose = append(verbose, fmt.Sprintf("Lifecycle has changed to '%+v' in container '%s'", expected.Lifecycle, expected.Name))
 	}
-	if !reflect.DeepEqual(expected.LivenessProbe, actual.LivenessProbe) {
+	if !r.isOpenshift() && !reflect.DeepEqual(expected.LivenessProbe, actual.LivenessProbe){
 		messages = append(messages, "Liveness probe has changed")
 		verbose = append(verbose, fmt.Sprintf("Liveness probe has changed to '%+v' in container '%s'", expected.LivenessProbe, expected.Name))
 	}
@@ -617,7 +618,7 @@ func (r *ReconcileJenkinsBaseConfiguration) compareContainers(expected corev1.Co
 		messages = append(messages, "Ports have changed")
 		verbose = append(verbose, fmt.Sprintf("Ports have changed to '%+v' in container '%s'", expected.Ports, expected.Name))
 	}
-	if !reflect.DeepEqual(expected.ReadinessProbe, actual.ReadinessProbe) {
+	if !r.isOpenshift() && !reflect.DeepEqual(expected.ReadinessProbe, actual.ReadinessProbe) {
 		messages = append(messages, "Readiness probe has changed")
 		verbose = append(verbose, fmt.Sprintf("Readiness probe has changed to '%+v' in container '%s'", expected.ReadinessProbe, expected.Name))
 	}
@@ -625,7 +626,7 @@ func (r *ReconcileJenkinsBaseConfiguration) compareContainers(expected corev1.Co
 		messages = append(messages, "Resources have changed")
 		verbose = append(verbose, fmt.Sprintf("Resources have changed to '%+v' in container '%s'", expected.Resources, expected.Name))
 	}
-	if !reflect.DeepEqual(expected.SecurityContext, actual.SecurityContext) {
+	if !r.isOpenshift() && !reflect.DeepEqual(expected.SecurityContext, actual.SecurityContext) {
 		messages = append(messages, "Security context has changed")
 		verbose = append(verbose, fmt.Sprintf("Security context has changed to '%+v' in container '%s'", expected.SecurityContext, expected.Name))
 	}
@@ -852,4 +853,12 @@ func (r *ReconcileJenkinsBaseConfiguration) ensureBaseConfiguration(jenkinsClien
 	})
 
 	return reconcile.Result{Requeue: requeue}, err
+}
+
+func (r *ReconcileJenkinsBaseConfiguration) isOpenshift() bool {
+	openshiftEnabled := false
+	if r.Configuration.Jenkins.Annotations[openshiftModeAnnotation] == "true" {
+		openshiftEnabled = true
+	}
+	return openshiftEnabled
 }
