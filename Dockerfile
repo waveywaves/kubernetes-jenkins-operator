@@ -54,6 +54,6 @@ ADD ./ $GOPATH/src/$GO_PACKAGE_PATH
 RUN make go-dependencies && go mod tidy && go mod vendor
 ENV GO111MODULE=auto
 RUN make build
-ADD build/_output/bin/jenkins-operator /usr/local/bin/jenkins-operator
+RUN cp build/_output/bin/jenkins-operator /usr/local/bin/jenkins-operator
 
 CMD [ "/usr/local/bin/jenkins-operator" ]
