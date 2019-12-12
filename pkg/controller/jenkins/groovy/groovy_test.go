@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2"
-	jenkinsclient "github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/client"
+	"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2"
+	jenkinsclient "github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/client"
 
 	"github.com/golang/mock/gomock"
-	"github.com/jenkinsci/kubernetes-operator/pkg/log"
+	"github.com/redhat-developer/jenkins-operator/pkg/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"

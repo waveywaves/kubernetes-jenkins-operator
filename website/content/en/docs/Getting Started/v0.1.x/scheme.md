@@ -25,7 +25,7 @@ Resource Types:
 <ul><li>
 <a href="#github.com%2fjenkinsci%2fkubernetes-operator%2fpkg%2fapis%2fjenkins%2fv1alpha2.Jenkins">Jenkins</a>
 </li></ul>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Jenkins">Jenkins
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Jenkins">Jenkins
 </h3>
 <p>
 <p>Jenkins is the Schema for the jenkins API</p>
@@ -73,7 +73,7 @@ Refer to the Kubernetes API documentation for the fields of the
 <td>
 <code>spec</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsSpec">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsSpec">
 JenkinsSpec
 </a>
 </em>
@@ -87,7 +87,7 @@ JenkinsSpec
 <td>
 <code>master</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsMaster">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsMaster">
 JenkinsMaster
 </a>
 </em>
@@ -101,22 +101,22 @@ Every single change here requires a pod restart.</p>
 <td>
 <code>seedJobs</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.SeedJob">
-[][]github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.SeedJob
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.SeedJob">
+[][]github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.SeedJob
 </a>
 </em>
 </td>
 <td>
 <em>(Optional)</em>
 <p>SeedJobs defines a list of Jenkins Seed Job configurations
-More info: <a href="https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-seed-jobs-and-pipelines">https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-seed-jobs-and-pipelines</a></p>
+More info: <a href="https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-seed-jobs-and-pipelines">https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-seed-jobs-and-pipelines</a></p>
 </td>
 </tr>
 <tr>
 <td>
 <code>service</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Service">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Service">
 Service
 </a>
 </em>
@@ -133,7 +133,7 @@ type: ClusterIP</p>
 <td>
 <code>slaveService</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Service">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Service">
 Service
 </a>
 </em>
@@ -150,7 +150,7 @@ type: ClusterIP</p>
 <td>
 <code>backup</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Backup">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Backup">
 Backup
 </a>
 </em>
@@ -158,14 +158,14 @@ Backup
 <td>
 <em>(Optional)</em>
 <p>Backup defines the configuration of a Jenkins backup
-More info: <a href="https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-backup-and-restore">https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-backup-and-restore</a></p>
+More info: <a href="https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-backup-and-restore">https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-backup-and-restore</a></p>
 </td>
 </tr>
 <tr>
 <td>
 <code>restore</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Restore">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Restore">
 Restore
 </a>
 </em>
@@ -173,7 +173,7 @@ Restore
 <td>
 <em>(Optional)</em>
 <p>Backup defines the configuration of a Jenkins backup restore
-More info: <a href="https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-backup-and-restore">https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-backup-and-restore</a></p>
+More info: <a href="https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-backup-and-restore">https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-backup-and-restore</a></p>
 </td>
 </tr>
 </table>
@@ -183,7 +183,7 @@ More info: <a href="https://github.com/jenkinsci/kubernetes-operator/blob/master
 <td>
 <code>status</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsStatus">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsStatus">
 JenkinsStatus
 </a>
 </em>
@@ -194,7 +194,7 @@ JenkinsStatus
 </tr>
 </tbody>
 </table>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Backup">Backup
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Backup">Backup
 </h3>
 <p>
 (<em>Appears on:</em>
@@ -226,7 +226,7 @@ string
 <td>
 <code>action</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Handler">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Handler">
 Handler
 </a>
 </em>
@@ -260,7 +260,7 @@ bool
 </tr>
 </tbody>
 </table>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Build">Build
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Build">Build
 </h3>
 <p>
 (<em>Appears on:</em>
@@ -314,7 +314,7 @@ int64
 <td>
 <code>status</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.BuildStatus">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.BuildStatus">
 BuildStatus
 </a>
 </em>
@@ -362,7 +362,7 @@ Kubernetes meta/v1.Time
 </tr>
 </tbody>
 </table>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.BuildStatus">BuildStatus
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.BuildStatus">BuildStatus
 (<code>string</code> alias)</p></h3>
 <p>
 (<em>Appears on:</em>
@@ -371,7 +371,7 @@ Kubernetes meta/v1.Time
 <p>
 <p>BuildStatus defines the type of Jenkins build job status</p>
 </p>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Container">Container
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Container">Container
 </h3>
 <p>
 (<em>Appears on:</em>
@@ -618,7 +618,7 @@ More info: <a href="https://kubernetes.io/docs/tasks/configure-pod-container/sec
 </tr>
 </tbody>
 </table>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Handler">Handler
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Handler">Handler
 </h3>
 <p>
 (<em>Appears on:</em>
@@ -651,7 +651,7 @@ Kubernetes core/v1.ExecAction
 </tr>
 </tbody>
 </table>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsCredentialType">JenkinsCredentialType
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsCredentialType">JenkinsCredentialType
 (<code>string</code> alias)</p></h3>
 <p>
 (<em>Appears on:</em>
@@ -660,7 +660,7 @@ Kubernetes core/v1.ExecAction
 <p>
 <p>JenkinsCredentialType defines type of Jenkins credential used in the seed job mechanism</p>
 </p>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsMaster">JenkinsMaster
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsMaster">JenkinsMaster
 </h3>
 <p>
 (<em>Appears on:</em>
@@ -730,8 +730,8 @@ fsGroup: 1000</p>
 <td>
 <code>containers</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Container">
-[][]github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Container
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Container">
+[][]github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Container
 </a>
 </em>
 </td>
@@ -791,8 +791,8 @@ More info: <a href="https://kubernetes.io/docs/concepts/storage/volumes">https:/
 <td>
 <code>basePlugins</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Plugin">
-[][]github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Plugin
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Plugin">
+[][]github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Plugin
 </a>
 </em>
 </td>
@@ -821,8 +821,8 @@ version: 0.12.1</p>
 <td>
 <code>plugins</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Plugin">
-[][]github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Plugin
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Plugin">
+[][]github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Plugin
 </a>
 </em>
 </td>
@@ -833,7 +833,7 @@ version: 0.12.1</p>
 </tr>
 </tbody>
 </table>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsSpec">JenkinsSpec
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsSpec">JenkinsSpec
 </h3>
 <p>
 (<em>Appears on:</em>
@@ -854,7 +854,7 @@ version: 0.12.1</p>
 <td>
 <code>master</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsMaster">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsMaster">
 JenkinsMaster
 </a>
 </em>
@@ -868,22 +868,22 @@ Every single change here requires a pod restart.</p>
 <td>
 <code>seedJobs</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.SeedJob">
-[][]github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.SeedJob
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.SeedJob">
+[][]github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.SeedJob
 </a>
 </em>
 </td>
 <td>
 <em>(Optional)</em>
 <p>SeedJobs defines list of Jenkins Seed Job configurations
-More info: <a href="https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-seed-jobs-and-pipelines">https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-seed-jobs-and-pipelines</a></p>
+More info: <a href="https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-seed-jobs-and-pipelines">https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-seed-jobs-and-pipelines</a></p>
 </td>
 </tr>
 <tr>
 <td>
 <code>service</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Service">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Service">
 Service
 </a>
 </em>
@@ -900,7 +900,7 @@ type: ClusterIP</p>
 <td>
 <code>slaveService</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Service">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Service">
 Service
 </a>
 </em>
@@ -917,7 +917,7 @@ type: ClusterIP</p>
 <td>
 <code>backup</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Backup">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Backup">
 Backup
 </a>
 </em>
@@ -925,14 +925,14 @@ Backup
 <td>
 <em>(Optional)</em>
 <p>Backup defines the configuration of the Jenkins backup
-More info: <a href="https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-backup-and-restore">https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-backup-and-restore</a></p>
+More info: <a href="https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-backup-and-restore">https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-backup-and-restore</a></p>
 </td>
 </tr>
 <tr>
 <td>
 <code>restore</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Restore">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Restore">
 Restore
 </a>
 </em>
@@ -940,12 +940,12 @@ Restore
 <td>
 <em>(Optional)</em>
 <p>Backup defines the configuration of the Jenkins backup restore
-More info: <a href="https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-backup-and-restore">https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-backup-and-restore</a></p>
+More info: <a href="https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-backup-and-restore">https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-backup-and-restore</a></p>
 </td>
 </tr>
 </tbody>
 </table>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsStatus">JenkinsStatus
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsStatus">JenkinsStatus
 </h3>
 <p>
 (<em>Appears on:</em>
@@ -1020,8 +1020,8 @@ Kubernetes meta/v1.Time
 <td>
 <code>builds</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Build">
-[][]github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Build
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Build">
+[][]github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Build
 </a>
 </em>
 </td>
@@ -1104,7 +1104,7 @@ string
 </tr>
 </tbody>
 </table>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Plugin">Plugin
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Plugin">Plugin
 </h3>
 <p>
 (<em>Appears on:</em>
@@ -1145,7 +1145,7 @@ string
 </tr>
 </tbody>
 </table>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Restore">Restore
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Restore">Restore
 </h3>
 <p>
 (<em>Appears on:</em>
@@ -1177,7 +1177,7 @@ string
 <td>
 <code>action</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Handler">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Handler">
 Handler
 </a>
 </em>
@@ -1200,7 +1200,7 @@ uint64
 </tr>
 </tbody>
 </table>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.SeedJob">SeedJob
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.SeedJob">SeedJob
 </h3>
 <p>
 (<em>Appears on:</em>
@@ -1208,7 +1208,7 @@ uint64
 </p>
 <p>
 <p>SeedJob defines configuration for seed job
-More info: <a href="https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-seed-jobs-and-pipelines">https://github.com/jenkinsci/kubernetes-operator/blob/master/docs/getting-started.md#configure-seed-jobs-and-pipelines</a></p>
+More info: <a href="https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-seed-jobs-and-pipelines">https://github.com/redhat-developer/jenkins-operator/blob/master/docs/getting-started.md#configure-seed-jobs-and-pipelines</a></p>
 </p>
 <table>
 <thead>
@@ -1289,7 +1289,7 @@ string
 <td>
 <code>credentialType</code></br>
 <em>
-<a href="#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsCredentialType">
+<a href="#github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsCredentialType">
 JenkinsCredentialType
 </a>
 </em>
@@ -1301,7 +1301,7 @@ JenkinsCredentialType
 </tr>
 </tbody>
 </table>
-<h3 id="github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Service">Service
+<h3 id="github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Service">Service
 </h3>
 <p>
 (<em>Appears on:</em>

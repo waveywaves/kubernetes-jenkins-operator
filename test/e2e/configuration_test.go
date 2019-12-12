@@ -6,12 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2"
-	jenkinsclient "github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/client"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/configuration/base"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/configuration/base/resources"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/groovy"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/plugins"
+	"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2"
+	jenkinsclient "github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/client"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/configuration/base"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/configuration/base/resources"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/groovy"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/plugins"
 
 	"github.com/bndr/gojenkins"
 	framework "github.com/operator-framework/operator-sdk/pkg/test"
@@ -41,7 +41,7 @@ func TestConfiguration(t *testing.T) {
 			Targets:               "cicd/jobs/*.jenkins",
 			Description:           "Jenkins Operator repository",
 			RepositoryBranch:      "master",
-			RepositoryURL:         "https://github.com/jenkinsci/kubernetes-operator.git",
+			RepositoryURL:         "https://github.com/redhat-developer/jenkins-operator.git",
 			PollSCM:               "1 1 1 1 1",
 			UnstableOnDeprecation: true,
 			BuildPeriodically:     "1 1 1 1 1",
@@ -114,7 +114,7 @@ func TestPlugins(t *testing.T) {
 			Targets:               "cicd/jobs/k8s.jenkins",
 			Description:           "Jenkins Operator repository",
 			RepositoryBranch:      "master",
-			RepositoryURL:         "https://github.com/jenkinsci/kubernetes-operator.git",
+			RepositoryURL:         "https://github.com/redhat-developer/jenkins-operator.git",
 		},
 	}
 

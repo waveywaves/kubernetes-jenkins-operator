@@ -422,11 +422,11 @@
           
           
           
-        <a href="https://github.com/jenkinsci/kubernetes-operator/edit/master/website/content/en/docs/Getting%20Started/v0.1.x/migration-guide-v1alpha1-to-v1alpha2.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
-        <a href="https://github.com/jenkinsci/kubernetes-operator/issues/new?title=Migration%20guide%20from%20v1alpha1%20to%20v1alpha2" target="_blank"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
+        <a href="https://github.com/redhat-developer/jenkins-operator/edit/master/website/content/en/docs/Getting%20Started/v0.1.x/migration-guide-v1alpha1-to-v1alpha2.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
+        <a href="https://github.com/redhat-developer/jenkins-operator/issues/new?title=Migration%20guide%20from%20v1alpha1%20to%20v1alpha2" target="_blank"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
           
               
-              <a href="https://github.com/jenkinsci/kubernetes-operator/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> Create project issue</a>
+              <a href="https://github.com/redhat-developer/jenkins-operator/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> Create project issue</a>
           
       </div>
     
@@ -789,11 +789,11 @@ Code that defines the data structures can be found <a href="v0.1.1/jenkins-v1alp
 <h2 id="update-crd-to-a-new-version">Update CRD to a new version</h2>
 
 <p>A new version of the Custom Resource Definition for the operator needs to be applied:
--<a href="https://github.com/jenkinsci/kubernetes-operator/blob/master/deploy/crds/jenkins_v1alpha2_jenkins_crd.yaml" target="_blank">Jenkins CRD v1alpha2</a></p>
+-<a href="https://github.com/redhat-developer/jenkins-operator/blob/master/deploy/crds/jenkins_v1alpha2_jenkins_crd.yaml" target="_blank">Jenkins CRD v1alpha2</a></p>
 
 <p>To use the default CRD file:</p>
 
-<pre><code>kubectl -n &lt;namespace&gt; apply -f https://github.com/jenkinsci/kubernetes-operator/blob/master/deploy/crds/jenkins_v1alpha2_jenkins_crd.yaml
+<pre><code>kubectl -n &lt;namespace&gt; apply -f https://github.com/redhat-developer/jenkins-operator/blob/master/deploy/crds/jenkins_v1alpha2_jenkins_crd.yaml
 </code></pre>
 
 <h2 id="update-rbac-to-a-new-version">Update RBAC to a new version</h2>
@@ -802,7 +802,7 @@ Code that defines the data structures can be found <a href="v0.1.1/jenkins-v1alp
 
 <p>To use the default Role file:</p>
 
-<pre><code>$ kubectl -n &lt;namespace&gt; apply -f https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/master/deploy/role.yaml
+<pre><code>$ kubectl -n &lt;namespace&gt; apply -f https://raw.githubusercontent.com/redhat-developer/jenkins-operator/master/deploy/role.yaml
 </code></pre>
 
 <h2 id="deploy-new-operator-manifests">Deploy new operator manifests</h2>
@@ -812,7 +812,7 @@ Code that defines the data structures can be found <a href="v0.1.1/jenkins-v1alp
 <p>Update operator version in the deployment file to <code>image: virtuslab/jenkins-operator:v0.1.0</code> and scale up,
 or use the default deployment manifest:</p>
 
-<pre><code>$ kubectl -n &lt;namespace&gt; apply -f https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/master/deploy/operator.yaml
+<pre><code>$ kubectl -n &lt;namespace&gt; apply -f https://raw.githubusercontent.com/redhat-developer/jenkins-operator/master/deploy/operator.yaml
 </code></pre>
 
 	

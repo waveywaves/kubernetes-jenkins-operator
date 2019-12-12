@@ -362,7 +362,7 @@ ifndef HAS_GEN_CRD_API_REFERENCE_DOCS
 	@tar -C $(GEN_CRD_API) -zxf $(GEN_CRD_API)_linux_amd64.tar.gz
 	@rm $(GEN_CRD_API)_linux_amd64.tar.gz
 endif
-	$(GEN_CRD_API)/$(GEN_CRD_API) -config gen-crd-api-config.json -api-dir github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/$(API_VERSION) -template-dir $(GEN_CRD_API)/template -out-file documentation/$(VERSION)/jenkins-$(API_VERSION)-scheme.md
+	$(GEN_CRD_API)/$(GEN_CRD_API) -config gen-crd-api-config.json -api-dir github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/$(API_VERSION) -template-dir $(GEN_CRD_API)/template -out-file documentation/$(VERSION)/jenkins-$(API_VERSION)-scheme.md
 
 .PHONY: minikube-start
 minikube-start: ## Start minikube
@@ -432,7 +432,7 @@ indocker: minikube-start image ## Run make in a docker container
 	@echo "+ $@"
 	docker run --rm -it $(DOCKER_FLAGS) \
 		-v /var/run/docker.sock:/var/run/docker.sock \
-		--mount type=bind,source=$(PWD),target=/go/src/github.com/jenkinsci/kubernetes-operator \
+		--mount type=bind,source=$(PWD),target=/go/src/github.com/redhat-developer/jenkins-operator \
 		--mount type=bind,source=$(HOME)/.minikube,target=/minikube \
 		--mount type=bind,source=$(HOME)/.kube,target=/home/builder/.kube \
 		-e DOCKER_HOST=$(DOCKER_HOST_IP) \
@@ -463,7 +463,7 @@ helm-package:
 .PHONY: helm-deploy
 helm-deploy: helm-package
 	@echo "+ $@"
-	helm repo index chart/ --url https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/master/chart/jenkins-operator/
+	helm repo index chart/ --url https://raw.githubusercontent.com/redhat-developer/jenkins-operator/master/chart/jenkins-operator/
 	cd chart/ && mv jenkins-operator-*.tgz jenkins-operator
 
 .PHONY: generate-docs

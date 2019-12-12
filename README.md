@@ -1,8 +1,8 @@
 # Jenkins Operator
 
-[![Version](https://img.shields.io/badge/version-v0.2.2-brightgreen.svg)](https://github.com/jenkinsci/kubernetes-operator/releases/tag/v0.2.2)
-[![Build Status](https://travis-ci.org/jenkinsci/kubernetes-operator.svg?branch=master)](https://travis-ci.org/jenkinsci/kubernetes-operator)
-[![Go Report Card](https://goreportcard.com/badge/github.com/jenkinsci/kubernetes-operator "Go Report Card")](https://goreportcard.com/report/github.com/jenkinsci/kubernetes-operator)
+[![Version](https://img.shields.io/badge/version-v0.2.2-brightgreen.svg)](https://github.com/redhat-developer/jenkins-operator/releases/tag/v0.2.2)
+[![Build Status](https://travis-ci.org/redhat-developer/jenkins-operator.svg?branch=master)](https://travis-ci.org/redhat-developer/jenkins-operator)
+[![Go Report Card](https://goreportcard.com/badge/github.com/redhat-developer/jenkins-operator "Go Report Card")](https://goreportcard.com/report/github.com/redhat-developer/jenkins-operator)
 [![Docker Pulls](https://img.shields.io/docker/pulls/virtuslab/jenkins-operator.svg)](https://hub.docker.com/r/virtuslab/jenkins-operator/tags)
 
 Go to [**our documentation website**](https://jenkinsci.github.io/kubernetes-operator/) for more information, with examples and guides.
@@ -49,16 +49,16 @@ Selected content:
 
 ## Common Jenkins issues and workarounds
 
-- Multibranch pipelines and backup issues: https://github.com/jenkinsci/kubernetes-operator/issues/104#issuecomment-554289768
+- Multibranch pipelines and backup issues: https://github.com/redhat-developer/jenkins-operator/issues/104#issuecomment-554289768
 
 ## Community & Contribution
 
 There is a dedicated channel `#jenkins-operator` on [virtuslab-oss.slack.com](https://virtuslab-oss.slack.com) ([Invite form](https://forms.gle/X3X8qA1XMirdBuEH7))
 
-Feel free to file [issues](https://github.com/jenkinsci/kubernetes-operator/issues) or [pull requests](https://github.com/jenkinsci/kubernetes-operator/pulls).    
+Feel free to file [issues](https://github.com/redhat-developer/jenkins-operator/issues) or [pull requests](https://github.com/redhat-developer/jenkins-operator/pulls).    
 
 Before any big pull request please consult the maintainers to ensure a common direction.
 
 ## About the authors
 
-This project was originally developed by [VirtusLab](https://virtuslab.com/) and the following [CONTRIBUTORS](https://github.com/jenkinsci/kubernetes-operator/graphs/contributors).
+This project was originally developed by [VirtusLab](https://virtuslab.com/) and the following [CONTRIBUTORS](https://github.com/redhat-developer/jenkins-operator/graphs/contributors).

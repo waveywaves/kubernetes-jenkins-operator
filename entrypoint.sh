@@ -13,7 +13,7 @@ kubectl config set-cluster minikube --server=https://$MINIKUBE_IP:8443 \
     kubectl config use-context minikube
 
 make go-dependencies
-ln -s $GOPATH/src/github.com/jenkinsci/kubernetes-operator/vendor/k8s.io $GOPATH/src/k8s.i
-ln -s $GOPATH/src/github.com/jenkinsci/kubernetes-operator/vendor/sigs.k8s.io $GOPATH/src/sigs.k8s.io
+ln -s $GOPATH/src/github.com/redhat-developer/jenkins-operator/vendor/k8s.io $GOPATH/src/k8s.i
+ln -s $GOPATH/src/github.com/redhat-developer/jenkins-operator/vendor/sigs.k8s.io $GOPATH/src/sigs.k8s.io
 
 bash

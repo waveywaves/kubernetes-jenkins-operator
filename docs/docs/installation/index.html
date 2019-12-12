@@ -415,11 +415,11 @@
           
           
           
-        <a href="https://github.com/jenkinsci/kubernetes-operator/edit/master/website/content/en/docs/Installation/_index.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
-        <a href="https://github.com/jenkinsci/kubernetes-operator/issues/new?title=Installation" target="_blank"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
+        <a href="https://github.com/redhat-developer/jenkins-operator/edit/master/website/content/en/docs/Installation/_index.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
+        <a href="https://github.com/redhat-developer/jenkins-operator/issues/new?title=Installation" target="_blank"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
           
               
-              <a href="https://github.com/jenkinsci/kubernetes-operator/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> Create project issue</a>
+              <a href="https://github.com/redhat-developer/jenkins-operator/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> Create project issue</a>
           
       </div>
     
@@ -495,11 +495,11 @@ All container images can be found at <a href="https://hub.docker.com/r/virtuslab
 <h2 id="configure-custom-resource-definition">Configure Custom Resource Definition</h2>
 
 <p>Install Jenkins Custom Resource Definition:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/master/deploy/crds/jenkins_v1alpha2_jenkins_crd.yaml</code></pre></div>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f https://raw.githubusercontent.com/redhat-developer/jenkins-operator/master/deploy/crds/jenkins_v1alpha2_jenkins_crd.yaml</code></pre></div>
 <h2 id="deploy-jenkins-operator">Deploy Jenkins Operator</h2>
 
 <p>Apply Service Account and RBAC roles:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/master/deploy/all-in-one-v1alpha2.yaml</code></pre></div>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f https://raw.githubusercontent.com/redhat-developer/jenkins-operator/master/deploy/all-in-one-v1alpha2.yaml</code></pre></div>
 <p>Watch <strong>Jenkins Operator</strong> instance being created:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods -w</code></pre></div>
 <p>Now <strong>Jenkins Operator</strong> should be up and running in the <code>default</code> namespace.</p>

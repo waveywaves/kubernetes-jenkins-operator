@@ -54,7 +54,7 @@ Any namespace to which the `jenkins-operator` is deployed must be considered to 
 possible permissions to any subject which can create a Pod in that namespace.
 
 To mitigate this issue **Jenkins Operator** should be deployed in one namespace and the Jenkins CR should be created in separate namespace. 
-To achieve it change watch namespace in https://github.com/jenkinsci/kubernetes-operator/blob/master/deploy/operator.yaml#L25
+To achieve it change watch namespace in https://github.com/redhat-developer/jenkins-operator/blob/master/deploy/operator.yaml#L25
 
 ## Setup Jenkins Operator and Jenkins in separated namespaces
 
@@ -101,4 +101,4 @@ $ kubectl -n jenkins -n jenkins-operator apply -f deploy/operator.yaml
 
 ## Report a Security Vulnerability
 
-If you find a vulnerability or any misconfiguration in Jenkins, please report it in the [issues](https://github.com/jenkinsci/kubernetes-operator/issues).
+If you find a vulnerability or any misconfiguration in Jenkins, please report it in the [issues](https://github.com/redhat-developer/jenkins-operator/issues).

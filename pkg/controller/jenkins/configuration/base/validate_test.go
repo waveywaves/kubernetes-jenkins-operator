@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/configuration"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/configuration/base/resources"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/constants"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/plugins"
-	"github.com/jenkinsci/kubernetes-operator/pkg/log"
+	"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/configuration"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/configuration/base/resources"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/constants"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/plugins"
+	"github.com/redhat-developer/jenkins-operator/pkg/log"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

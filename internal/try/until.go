@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jenkinsci/kubernetes-operator/internal/errors"
-	time2 "github.com/jenkinsci/kubernetes-operator/internal/time"
+	"github.com/redhat-developer/jenkins-operator/internal/errors"
+	time2 "github.com/redhat-developer/jenkins-operator/internal/time"
 )
 
 // ErrTimeout is used when the set timeout has been reached

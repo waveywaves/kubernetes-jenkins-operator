@@ -74,9 +74,9 @@ copyright = "VirtusLab"
 version_menu = "Releases"
 
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
-github_repo = "https://github.com/jenkinsci/kubernetes-operator"
+github_repo = "https://github.com/redhat-developer/jenkins-operator"
 # An optional link to a related project repo. For example, the sibling repository where your product code lives.
-github_project_repo = "https://github.com/jenkinsci/kubernetes-operator"
+github_project_repo = "https://github.com/redhat-developer/jenkins-operator"
 
 # Specify a value here if your content directory is not in your repo's root directory
 # github_subdir = ""

@@ -10,5 +10,5 @@ menu:
 ---
 
 {{% pageinfo %}}
-This project was originally developed by [VirtusLab](https://virtuslab.com) and the following [CONTRIBUTORS](https://github.com/jenkinsci/kubernetes-operator/graphs/contributors).
+This project was originally developed by [VirtusLab](https://virtuslab.com) and the following [CONTRIBUTORS](https://github.com/redhat-developer/jenkins-operator/graphs/contributors).
 {{% /pageinfo %}}

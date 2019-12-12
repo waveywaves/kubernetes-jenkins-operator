@@ -10,12 +10,12 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/jenkinsci/kubernetes-operator/internal/render"
-	"github.com/jenkinsci/kubernetes-operator/internal/try"
-	"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2"
-	jenkinsclient "github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/client"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/configuration/user/seedjobs"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/constants"
+	"github.com/redhat-developer/jenkins-operator/internal/render"
+	"github.com/redhat-developer/jenkins-operator/internal/try"
+	"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2"
+	jenkinsclient "github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/client"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/configuration/user/seedjobs"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/constants"
 
 	framework "github.com/operator-framework/operator-sdk/pkg/test"
 	"github.com/stretchr/testify/assert"
@@ -249,7 +249,7 @@ if (jobRef.getScm().getBranches().find { val -> val.getName() == "{{ .Repository
 	throw new Exception("Specified SCM branch not found")	
 }
 
-if(jobRef.getScm().getRepositories().find { it.getURIs().find { uri -> uri.toString().equals("https://github.com/jenkinsci/kubernetes-operator.git") } } == null) {
+if(jobRef.getScm().getRepositories().find { it.getURIs().find { uri -> uri.toString().equals("https://github.com/redhat-developer/jenkins-operator.git") } } == null) {
 	throw new Exception("Specified SCM repositories are invalid")
 }
 

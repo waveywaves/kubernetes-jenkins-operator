@@ -5,10 +5,10 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	"testing"
 
-	"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2"
-	jenkinsclient "github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/client"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/configuration"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/configuration/base/resources"
+	"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2"
+	jenkinsclient "github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/client"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/configuration"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/configuration/base/resources"
 
 	"github.com/bndr/gojenkins"
 	"github.com/golang/mock/gomock"
@@ -57,7 +57,7 @@ func jenkinsCustomResource() *v1alpha2.Jenkins {
 					Targets:               "cicd/jobs/*.jenkins",
 					Description:           "Jenkins Operator e2e tests repository",
 					RepositoryBranch:      "master",
-					RepositoryURL:         "https://github.com/jenkinsci/kubernetes-operator.git",
+					RepositoryURL:         "https://github.com/redhat-developer/jenkins-operator.git",
 				},
 			},
 		},

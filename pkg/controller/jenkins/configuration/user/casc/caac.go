@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2"
-	jenkinsclient "github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/client"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/configuration/base/resources"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/groovy"
+	"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2"
+	jenkinsclient "github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/client"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/configuration/base/resources"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/groovy"
 
 	"github.com/go-logr/logr"
 	k8s "sigs.k8s.io/controller-runtime/pkg/client"

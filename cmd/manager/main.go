@@ -10,14 +10,14 @@ import (
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
-	"github.com/jenkinsci/kubernetes-operator/pkg/apis"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/constants"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/notifications"
-	e "github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/notifications/event"
-	"github.com/jenkinsci/kubernetes-operator/pkg/event"
-	"github.com/jenkinsci/kubernetes-operator/pkg/log"
-	"github.com/jenkinsci/kubernetes-operator/version"
+	"github.com/redhat-developer/jenkins-operator/pkg/apis"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/constants"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/notifications"
+	e "github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/notifications/event"
+	"github.com/redhat-developer/jenkins-operator/pkg/event"
+	"github.com/redhat-developer/jenkins-operator/pkg/log"
+	"github.com/redhat-developer/jenkins-operator/version"
 
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
 	kubemetrics "github.com/operator-framework/operator-sdk/pkg/kube-metrics"

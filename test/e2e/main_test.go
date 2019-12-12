@@ -4,9 +4,9 @@ import (
 	"flag"
 	"testing"
 
-	"github.com/jenkinsci/kubernetes-operator/pkg/apis"
-	"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/constants"
+	"github.com/redhat-developer/jenkins-operator/pkg/apis"
+	"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/constants"
 
 	f "github.com/operator-framework/operator-sdk/pkg/test"
 	framework "github.com/operator-framework/operator-sdk/pkg/test"

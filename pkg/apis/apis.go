@@ -1,7 +1,7 @@
 package apis
 
 import (
-	"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2"
+	"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2"
 
 	"k8s.io/apimachinery/pkg/runtime"
 )

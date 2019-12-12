@@ -1,8 +1,8 @@
 package event
 
 import (
-	"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/notifications/reason"
+	"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/notifications/reason"
 )
 
 // Phase defines the context where notification has been generated: base or user.

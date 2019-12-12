@@ -1,8 +1,8 @@
 package provider
 
 import (
-	"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/notifications/event"
+	"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/notifications/event"
 )
 
 const (

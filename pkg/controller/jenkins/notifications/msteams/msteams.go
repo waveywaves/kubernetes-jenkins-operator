@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/notifications/event"
-	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/notifications/provider"
+	"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/notifications/event"
+	"github.com/redhat-developer/jenkins-operator/pkg/controller/jenkins/notifications/provider"
 
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"

@@ -13,9 +13,9 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Jenkins":       schema_pkg_apis_jenkins_v1alpha2_Jenkins(ref),
-		"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsSpec":   schema_pkg_apis_jenkins_v1alpha2_JenkinsSpec(ref),
-		"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsStatus": schema_pkg_apis_jenkins_v1alpha2_JenkinsStatus(ref),
+		"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Jenkins":       schema_pkg_apis_jenkins_v1alpha2_Jenkins(ref),
+		"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsSpec":   schema_pkg_apis_jenkins_v1alpha2_JenkinsSpec(ref),
+		"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsStatus": schema_pkg_apis_jenkins_v1alpha2_JenkinsStatus(ref),
 	}
 }
 
@@ -46,19 +46,19 @@ func schema_pkg_apis_jenkins_v1alpha2_Jenkins(ref common.ReferenceCallback) comm
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsSpec"),
+							Ref: ref("github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsStatus"),
+							Ref: ref("github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsSpec", "github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsSpec", "github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -71,7 +71,7 @@ func schema_pkg_apis_jenkins_v1alpha2_JenkinsSpec(ref common.ReferenceCallback) 
 					"master": {
 						SchemaProps: spec.SchemaProps{
 							Description: "INSERT ADDITIONAL SPEC FIELDS - desired state of cluster Important: Run \"operator-sdk generate k8s\" to regenerate code after modifying this file",
-							Ref:         ref("github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsMaster"),
+							Ref:         ref("github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsMaster"),
 						},
 					},
 					"seedJobs": {
@@ -80,7 +80,7 @@ func schema_pkg_apis_jenkins_v1alpha2_JenkinsSpec(ref common.ReferenceCallback) 
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.SeedJob"),
+										Ref: ref("github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.SeedJob"),
 									},
 								},
 							},
@@ -88,29 +88,29 @@ func schema_pkg_apis_jenkins_v1alpha2_JenkinsSpec(ref common.ReferenceCallback) 
 					},
 					"service": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Service"),
+							Ref: ref("github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Service"),
 						},
 					},
 					"slaveService": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Service"),
+							Ref: ref("github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Service"),
 						},
 					},
 					"backup": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Backup"),
+							Ref: ref("github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Backup"),
 						},
 					},
 					"restore": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Restore"),
+							Ref: ref("github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Restore"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Backup", "github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.JenkinsMaster", "github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Restore", "github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.SeedJob", "github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Service"},
+			"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Backup", "github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.JenkinsMaster", "github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Restore", "github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.SeedJob", "github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Service"},
 	}
 }
 
@@ -148,7 +148,7 @@ func schema_pkg_apis_jenkins_v1alpha2_JenkinsStatus(ref common.ReferenceCallback
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Build"),
+										Ref: ref("github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Build"),
 									},
 								},
 							},
@@ -176,6 +176,6 @@ func schema_pkg_apis_jenkins_v1alpha2_JenkinsStatus(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Build", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+			"github.com/redhat-developer/jenkins-operator/pkg/apis/jenkins/v1alpha2.Build", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }

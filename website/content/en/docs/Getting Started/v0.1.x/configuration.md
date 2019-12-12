@@ -35,7 +35,7 @@ pipelineJob('build-jenkins-operator') {
             scm {
                 git {
                     remote {
-                        url('https://github.com/jenkinsci/kubernetes-operator.git')
+                        url('https://github.com/redhat-developer/jenkins-operator.git')
                         credentials('jenkins-operator')
                     }
                     branches('*/master')
@@ -55,7 +55,7 @@ pipelineJob('build-jenkins-operator') {
 def label = "build-jenkins-operator-${UUID.randomUUID().toString()}"
 def home = "/home/jenkins"
 def workspace = "${home}/workspace/build-jenkins-operator"
-def workdir = "${workspace}/src/github.com/jenkinsci/kubernetes-operator/"
+def workdir = "${workspace}/src/github.com/redhat-developer/jenkins-operator/"
 
 podTemplate(label: label,
         containers: [
@@ -115,7 +115,7 @@ spec:
     targets: "cicd/jobs/*.jenkins"
     description: "Jenkins Operator repository"
     repositoryBranch: master
-    repositoryUrl: https://github.com/jenkinsci/kubernetes-operator.git
+    repositoryUrl: https://github.com/redhat-developer/jenkins-operator.git
 ```
 
 **Jenkins Operator** will automatically discover and configure all the seed jobs.
@@ -178,7 +178,7 @@ spec:
     targets: "cicd/jobs/*.jenkins"
     description: "Jenkins Operator repository"
     repositoryBranch: master
-    repositoryUrl: git@github.com:jenkinsci/kubernetes-operator.git
+    repositoryUrl: git@github.com:redhat-developer/jenkins-operator.git
 ```
 
 and create a Kubernetes Secret (name of secret should be the same from `credentialID` field):
@@ -214,7 +214,7 @@ spec:
     targets: "cicd/jobs/*.jenkins"
     description: "Jenkins Operator repository"
     repositoryBranch: master
-    repositoryUrl: https://github.com/jenkinsci/kubernetes-operator.git
+    repositoryUrl: https://github.com/redhat-developer/jenkins-operator.git
 ```
 
 and create a Kubernetes Secret (name of secret should be the same from `credentialID` field):

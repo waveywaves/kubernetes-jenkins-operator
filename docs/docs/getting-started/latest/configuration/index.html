@@ -422,11 +422,11 @@
           
           
           
-        <a href="https://github.com/jenkinsci/kubernetes-operator/edit/master/website/content/en/docs/Getting%20Started/latest/configuration.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
-        <a href="https://github.com/jenkinsci/kubernetes-operator/issues/new?title=Configuration" target="_blank"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
+        <a href="https://github.com/redhat-developer/jenkins-operator/edit/master/website/content/en/docs/Getting%20Started/latest/configuration.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
+        <a href="https://github.com/redhat-developer/jenkins-operator/issues/new?title=Configuration" target="_blank"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
           
               
-              <a href="https://github.com/jenkinsci/kubernetes-operator/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> Create project issue</a>
+              <a href="https://github.com/redhat-developer/jenkins-operator/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> Create project issue</a>
           
       </div>
     
@@ -542,7 +542,7 @@ pipelineJob('build-jenkins-operator') {
             scm {
                 git {
                     remote {
-                        url('https://github.com/jenkinsci/kubernetes-operator.git')
+                        url('https://github.com/redhat-developer/jenkins-operator.git')
                         credentials('jenkins-operator')
                     }
                     branches('*/master')
@@ -561,7 +561,7 @@ pipelineJob('build-jenkins-operator') {
 def label = &quot;build-jenkins-operator-${UUID.randomUUID().toString()}&quot;
 def home = &quot;/home/jenkins&quot;
 def workspace = &quot;${home}/workspace/build-jenkins-operator&quot;
-def workdir = &quot;${workspace}/src/github.com/jenkinsci/kubernetes-operator/&quot;
+def workdir = &quot;${workspace}/src/github.com/redhat-developer/jenkins-operator/&quot;
 
 podTemplate(label: label,
         containers: [
@@ -620,7 +620,7 @@ spec:
     targets: &quot;cicd/jobs/*.jenkins&quot;
     description: &quot;Jenkins Operator repository&quot;
     repositoryBranch: master
-    repositoryUrl: https://github.com/jenkinsci/kubernetes-operator.git
+    repositoryUrl: https://github.com/redhat-developer/jenkins-operator.git
 </code></pre>
 
 <p><strong>Jenkins Operator</strong> will automatically discover and configure all the seed jobs.</p>
@@ -670,7 +670,7 @@ spec:
     targets: &quot;cicd/jobs/*.jenkins&quot;
     description: &quot;Jenkins Operator repository&quot;
     repositoryBranch: master
-    repositoryUrl: git@github.com:jenkinsci/kubernetes-operator.git
+    repositoryUrl: git@github.com:redhat-developer/jenkins-operator.git
 </code></pre>
 
 <p>and create a Kubernetes Secret (name of secret should be the same from <code>credentialID</code> field):</p>
@@ -704,7 +704,7 @@ spec:
     targets: &quot;cicd/jobs/*.jenkins&quot;
     description: &quot;Jenkins Operator repository&quot;
     repositoryBranch: master
-    repositoryUrl: https://github.com/jenkinsci/kubernetes-operator.git
+    repositoryUrl: https://github.com/redhat-developer/jenkins-operator.git
 </code></pre>
 
 <p>and create a Kubernetes Secret (name of secret should be the same from <code>credentialID</code> field):</p>
