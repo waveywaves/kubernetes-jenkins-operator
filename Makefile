@@ -22,7 +22,7 @@ include $(config)
 
 # Set an output prefix, which is the local directory if not specified
 PREFIX?=$(shell pwd)
-
+KUBECTL_CONTEXT = $(shell kubectl config current-context)
 VERSION := $(shell cat VERSION.txt)
 GITCOMMIT := $(shell git rev-parse --short HEAD)
 GITBRANCH := $(shell git rev-parse --abbrev-ref HEAD)
