@@ -19,6 +19,7 @@ include config.base.env
 
 # Import config
 # You can change the default config with `make config="config_special.env" build`
+config = ${CONFIG}
 config ?= config.minikube.env
 include $(config)
 
