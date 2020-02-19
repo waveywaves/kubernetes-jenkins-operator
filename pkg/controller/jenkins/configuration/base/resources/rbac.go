@@ -26,28 +26,18 @@ func NewRole(meta metav1.ObjectMeta) *v1.Role {
 		Rules: []v1.PolicyRule{
 			{
 				APIGroups: []string{""},
-				Resources: []string{"pods/portforward"},
-				Verbs:     []string{createVerb},
-			},
-			{
-				APIGroups: []string{""},
-				Resources: []string{"pods"},
+				Resources: []string{"pods", "pods/exec", "pods/portforward", "pods/log"},
 				Verbs:     []string{createVerb, deleteVerb, getVerb, listVerb, patchVerb, updateVerb, watchVerb},
 			},
 			{
 				APIGroups: []string{""},
-				Resources: []string{"pods/exec"},
+				Resources: []string{"secrets", "configmaps"},
 				Verbs:     []string{createVerb, deleteVerb, getVerb, listVerb, patchVerb, updateVerb, watchVerb},
 			},
 			{
-				APIGroups: []string{""},
-				Resources: []string{"pods/log"},
-				Verbs:     []string{getVerb, listVerb, watchVerb},
-			},
-			{
-				APIGroups: []string{""},
-				Resources: []string{"secrets"},
-				Verbs:     []string{getVerb, listVerb, watchVerb},
+				APIGroups: []string{"build.openshift.io", "image.openshift.io"},
+				Resources: []string{"*"},
+				Verbs:     []string{createVerb, deleteVerb, getVerb, listVerb, patchVerb, updateVerb, watchVerb},
 			},
 		},
 	}
