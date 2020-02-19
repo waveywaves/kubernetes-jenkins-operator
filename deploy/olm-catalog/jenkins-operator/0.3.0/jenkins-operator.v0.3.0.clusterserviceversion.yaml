@@ -108,90 +108,87 @@ spec:
         - apiGroups:
           - ""
           resources:
-          - services
-          - configmaps
-          - secrets
+            - services
+            - configmaps
+            - secrets
+            - serviceaccounts
           verbs:
-          - get
-          - create
-          - update
-          - list
-          - watch
+            - get
+            - create
+            - update
+            - list
+            - watch
         - apiGroups:
-          - apps
+            - apps
           resources:
-          - deployments
-          - daemonsets
-          - replicasets
-          - statefulsets
+            - deployments
+            - daemonsets
+            - replicasets
+            - statefulsets
           verbs:
-          - '*'
+            - '*'
         - apiGroups:
-          - ""
+            - rbac.authorization.k8s.io
           resources:
-          - serviceaccounts
+            - roles
+            - rolebindings
           verbs:
-          - create
+            - create
+            - update
+            - list
+            - watch
         - apiGroups:
-          - rbac.authorization.k8s.io
+            - ""
           resources:
-          - roles
-          - rolebindings
+            - pods/portforward
           verbs:
-          - create
-          - update
+            - create
         - apiGroups:
-          - ""
+            - ""
           resources:
-          - pods/portforward
+            - pods/log
           verbs:
-          - create
+            - get
+            - list
+            - watch
         - apiGroups:
-          - ""
+            - ""
           resources:
-          - pods/log
+            - pods
+            - pods/exec
           verbs:
-          - get
-          - list
-          - watch
+            - "*"
         - apiGroups:
-          - ""
+            - ""
           resources:
-          - pods
-          - pods/exec
+            - events
           verbs:
-          - '*'
+            - watch
+            - list
+            - create
+            - patch
         - apiGroups:
-          - ""
-          resources:
-          - events
-          verbs:
-          - watch
-          - list
-          - create
-          - patch
-        - apiGroups:
-          - apps
+            - apps
           resourceNames:
-          - jenkins-operator
+            - jenkins-operator
           resources:
-          - deployments/finalizers
+            - deployments/finalizers
           verbs:
-          - update
+            - update
         - apiGroups:
-          - jenkins.io
+            - jenkins.io
           resources:
-          - '*'
+            - '*'
           verbs:
-          - '*'
+            - '*'
         - apiGroups:
-          - ""
+            - ""
           resources:
-          - persistentvolumeclaims
+            - persistentvolumeclaims
           verbs:
-          - get
-          - list
-          - watch
+            - get
+            - list
+            - watch
         serviceAccountName: jenkins-operator
     strategy: deployment
   installModes:
