@@ -5,7 +5,11 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/client-go/discovery"
+	"k8s.io/client-go/kubernetes"
 	"reflect"
+	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"strings"
 	"time"
 
@@ -20,6 +24,7 @@ import (
 	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkins/plugins"
 	"github.com/jenkinsci/kubernetes-operator/pkg/log"
 	"github.com/jenkinsci/kubernetes-operator/version"
+	routev1 "github.com/openshift/api/route/v1"
 
 	"github.com/bndr/gojenkins"
 	"github.com/go-logr/logr"
@@ -37,6 +42,10 @@ const (
 	fetchAllPlugins = 1
 )
 
+var (
+	routeAPIFound = false
+)
+
 // ReconcileJenkinsBaseConfiguration defines values required for Jenkins base configuration
 type ReconcileJenkinsBaseConfiguration struct {
 	configuration.Configuration
@@ -46,6 +55,7 @@ type ReconcileJenkinsBaseConfiguration struct {
 
 // New create structure which takes care of base configuration
 func New(config configuration.Configuration, logger logr.Logger, jenkinsAPIConnectionSettings jenkinsclient.JenkinsAPIConnectionSettings) *ReconcileJenkinsBaseConfiguration {
+	verifyRouteAPI()
 	return &ReconcileJenkinsBaseConfiguration{
 		Configuration:                config,
 		logger:                       logger,
@@ -173,6 +183,7 @@ func (r *ReconcileJenkinsBaseConfiguration) ensureResourcesRequiredForJenkinsPod
 	}
 	r.logger.V(log.VDebug).Info("ConfigurationAsCode Secret and ConfigMap added watched labels")
 
+	r.logger.V(log.VDebug).Info("Jenkins Slave Service is present")
 	if err := r.createRBAC(metaObject); err != nil {
 		return err
 	}
@@ -183,14 +194,20 @@ func (r *ReconcileJenkinsBaseConfiguration) ensureResourcesRequiredForJenkinsPod
 	}
 	r.logger.V(log.VDebug).Info("Extra role bindings are present")
 
-	if err := r.createService(metaObject, resources.GetJenkinsHTTPServiceName(r.Configuration.Jenkins), r.Configuration.Jenkins.Spec.Service); err != nil {
+	httpServiceName := resources.GetJenkinsHTTPServiceName(r.Configuration.Jenkins)
+	if err := r.createService(metaObject, httpServiceName, r.Configuration.Jenkins.Spec.Service); err != nil {
 		return err
 	}
 	r.logger.V(log.VDebug).Info("Jenkins HTTP Service is present")
+
+	if err := r.createRoute(metaObject, httpServiceName); err != nil && routeAPIFound {
+		return err
+	}
+	r.logger.V(log.VDebug).Info("Jenkins Route is present")
+
 	if err := r.createService(metaObject, resources.GetJenkinsSlavesServiceName(r.Configuration.Jenkins), r.Configuration.Jenkins.Spec.SlaveService); err != nil {
 		return err
 	}
-	r.logger.V(log.VDebug).Info("Jenkins slave Service is present")
 
 	return nil
 }
@@ -428,6 +445,7 @@ func (r *ReconcileJenkinsBaseConfiguration) ensureExtraRBAC(meta metav1.ObjectMe
 			if err = r.Client.Delete(context.TODO(), &roleBinding); err != nil {
 				return stackerr.WithStack(err)
 			}
+			continue
 		}
 	}
 
@@ -468,6 +486,26 @@ func (r *ReconcileJenkinsBaseConfiguration) createService(meta metav1.ObjectMeta
 	service.Spec.Selector = meta.Labels // make sure that user won't break service by hand
 	service = resources.UpdateService(service, config)
 	return stackerr.WithStack(r.UpdateResource(&service))
+}
+
+func (r *ReconcileJenkinsBaseConfiguration) createRoute(meta metav1.ObjectMeta, name string) error {
+	route := routev1.Route{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: meta.Namespace,
+			Labels:    meta.Labels,
+		},
+	}
+	err := r.Client.Get(context.TODO(), types.NamespacedName{Name: name, Namespace: meta.Namespace}, &route)
+	if err != nil && apierrors.IsNotFound(err) {
+		resources.PopulateRouteFromService(&route, name)
+		if err = r.CreateResource(&route); err != nil {
+			return stackerr.WithStack(err)
+		}
+	} else if err != nil {
+		return stackerr.WithStack(err)
+	}
+	return nil
 }
 
 func (r *ReconcileJenkinsBaseConfiguration) getJenkinsMasterPod() (*corev1.Pod, error) {
@@ -1091,4 +1129,40 @@ func (r *ReconcileJenkinsBaseConfiguration) handleAdmissionControllerChanges(cur
 			r.logger.Info(fmt.Sprintf("The Admission controller has changed the securityContext, changing the Jenkins CR spec.master.containers[%s].securityContext to '+%v'", container.Name, currentJenkinsMasterPod.Spec.Containers[i].SecurityContext))
 		}
 	}
+}
+
+func isAPIDiscoverable(group string, version string) (bool, error) {
+	cfg, err := config.GetConfig()
+	if err != nil {
+		// Unable to get KBS Config
+		return false, err
+	}
+
+	k8s, err := kubernetes.NewForConfig(cfg)
+	if err != nil {
+		// Unable to create K8s client
+		return false, err
+	}
+
+	gv := schema.GroupVersion{
+		Group:   group,
+		Version: version,
+	}
+
+	if err = discovery.ServerSupportsVersion(k8s, gv); err != nil {
+		// error, API not available
+		return false, nil
+	}
+
+	// API Exists
+	return true, nil
+}
+
+func verifyRouteAPI() error {
+	found, err := isAPIDiscoverable(routev1.GroupName, routev1.SchemeGroupVersion.Version)
+	if err != nil {
+		return err
+	}
+	routeAPIFound = found
+	return nil
 }
