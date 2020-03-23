@@ -16,8 +16,6 @@ It was built with immutability and declarative configuration as code in mind.
 
 Out of the box it provides:
 - integration with Kubernetes ([Jenkins kubernetes-plugin](https://github.com/jenkinsci/kubernetes-plugin))
-- pipelines as code ([Jenkins pipelines](https://jenkins.io/doc/book/pipeline/))
-- extensibility via groovy scripts (similar to [Jenkins script console](https://wiki.jenkins.io/display/JENKINS/Jenkins+Script+Console)) or ([configuration as code plugin](https://github.com/jenkinsci/configuration-as-code-plugin))
 - secure defaults and hardening (see [the security section](https://jenkinsci.github.io/kubernetes-operator/docs/security/) of the documentation)
 
 ## Problem statement and goals
@@ -51,11 +49,13 @@ Selected content:
 
 - Multibranch pipelines and backup issues: https://github.com/jenkinsci/kubernetes-operator/issues/104#issuecomment-554289768
 
-## Community & Contribution
+## Community
 
 There is a dedicated channel `#jenkins-operator` on [virtuslab-oss.slack.com](https://virtuslab-oss.slack.com) ([Invite form](https://forms.gle/X3X8qA1XMirdBuEH7))
 
-Feel free to file [issues](https://github.com/jenkinsci/kubernetes-operator/issues) or [pull requests](https://github.com/jenkinsci/kubernetes-operator/pulls).    
+## Contribution
+
+Feel free to file [issues](https://github.com/jenkinsci/kubernetes-operator/issues) or [pull requests](https://github.com/jenkinsci/kubernetes-operator/pulls).
 
 Before any big pull request please consult the maintainers to ensure a common direction.
 
