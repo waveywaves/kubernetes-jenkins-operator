@@ -1,0 +1,7 @@
+apiVersion: jenkins.io/v1alpha3
+kind: SeedJob
+metadata:
+  name: example-seedjob
+spec:
+  # Add fields here
+  size: 3

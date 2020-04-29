@@ -251,6 +251,7 @@ ifeq ($(KUBERNETES_PROVIDER),crc)
 	oc project $(CRC_OC_PROJECT)
 endif
 	kubectl apply -f deploy/crds/jenkins_$(API_VERSION)_jenkins_crd.yaml
+	kubectl apply -f deploy/crds/jenkins_v1alpha3_seedjob_crd.yaml
 	@echo "Watching '$(WATCH_NAMESPACE)' namespace"
 	build/_output/bin/jenkins-operator $(OPERATOR_ARGS)
 
@@ -371,6 +372,7 @@ minikube-run: minikube-start ## Run the operator locally and use minikube as Kub
 	@echo "+ $@"
 	kubectl config use-context minikube
 	kubectl apply -f deploy/crds/jenkins_$(API_VERSION)_jenkins_crd.yaml
+	kubectl apply -f deploy/crds/jenkins_v1alpha3_seedjob_crd.yaml
 	@echo "Watching '$(WATCH_NAMESPACE)' namespace"
 	build/_output/bin/jenkins-operator $(OPERATOR_ARGS)
 
@@ -381,6 +383,7 @@ crc-run: crc-start ## Run the operator locally and use CodeReady Containers as K
 	@echo "+ $@"
 	oc project $(CRC_OC_PROJECT)
 	kubectl apply -f deploy/crds/jenkins_$(API_VERSION)_jenkins_crd.yaml
+	kubectl apply -f deploy/crds/jenkins_v1alpha3_seedjob_crd.yaml
 	@echo "Watching '$(WATCH_NAMESPACE)' namespace"
 	build/_output/bin/jenkins-operator $(OPERATOR_ARGS)
 

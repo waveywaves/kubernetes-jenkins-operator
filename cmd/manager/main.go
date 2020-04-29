@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/jenkinsci/kubernetes-operator/pkg/controller/seedjob"
 	"os"
 	"runtime"
 
@@ -131,6 +132,11 @@ func main() {
 
 	// setup Jenkins controller
 	if err := jenkins.Add(mgr, jenkinsAPIConnectionSettings, *clientSet, *cfg, &c); err != nil {
+		fatal(errors.Wrap(err, "failed to setup controllers"), *debug)
+	}
+
+	// setup SeedJob controller
+	if err := seedjob.Add(mgr); err != nil {
 		fatal(errors.Wrap(err, "failed to setup controllers"), *debug)
 	}
 
