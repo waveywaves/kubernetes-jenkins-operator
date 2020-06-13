@@ -7,6 +7,8 @@ import (
 	"os"
 	"runtime"
 
+	"k8s.io/apimachinery/pkg/runtime/schema"
+
 	"github.com/jenkinsci/kubernetes-operator/pkg/controller/jenkinsimage"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
@@ -22,6 +24,8 @@ import (
 	"github.com/jenkinsci/kubernetes-operator/pkg/notifications"
 	e "github.com/jenkinsci/kubernetes-operator/pkg/notifications/event"
 	"github.com/jenkinsci/kubernetes-operator/version"
+	routev1 "github.com/openshift/api/route/v1"
+	appsv1 "k8s.io/api/apps/v1"
 
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
 	kubemetrics "github.com/operator-framework/operator-sdk/pkg/kube-metrics"
@@ -105,6 +109,16 @@ func main() {
 
 	log.Log.Info("Registering Components.")
 
+	// setup Scheme for Openshift routes
+	if err := routev1.Install(mgr.GetScheme()); err != nil {
+		fatal(errors.Wrap(err, "failed to setup scheme"), *debug)
+	}
+
+	// setup Scheme for Deployment and related
+	if err := appsv1.AddToScheme(mgr.GetScheme()); err != nil {
+		fatal(errors.Wrap(err, "failed to setup scheme"), *debug)
+	}
+
 	// setup Scheme for all resources
 	if err := apis.AddToScheme(mgr.GetScheme()); err != nil {
 		fatal(errors.Wrap(err, "failed to setup scheme"), *debug)
@@ -183,7 +197,13 @@ func main() {
 func serveCRMetrics(cfg *rest.Config) error {
 	// Below function returns filtered operator/CustomResource specific GVKs.
 	// For more control override the below GVK list with your own custom logic.
-	filteredGVK, err := k8sutil.GetGVKsFromAddToScheme(apis.AddToScheme)
+	gvks, err := k8sutil.GetGVKsFromAddToScheme(apis.AddToScheme)
+	if err != nil {
+		return err
+	}
+	// We perform our custom GKV filtering on top of the one performed
+	// by operator-sdk code
+	filteredGVK := filterGKVsFromAddToScheme(gvks)
 	if err != nil {
 		return err
 	}
@@ -205,4 +225,57 @@ func fatal(err error, debug bool) {
 		log.Log.Error(nil, fmt.Sprintf("%s", err))
 	}
 	os.Exit(-1)
+}
+
+func filterGKVsFromAddToScheme(gvks []schema.GroupVersionKind) []schema.GroupVersionKind {
+	// We use gkvFilters to filter from the existing GKVs defined in the used
+	// runtime.Schema for the operator. The reason for that is that
+	// kube-metrics tries to list all of the defined Kinds in the schemas
+	// that are passed, including Kinds that the operator doesn't use and
+	// thus the role used the operator doesn't have them set and we don't want
+	// to set as they are not used by the operator.
+	// For the fields that the filters have we have defined the value '*' to
+	// specify any will be a match (accepted)
+	matchAnyValue := "*"
+	gvkFilters := []schema.GroupVersionKind{
+		// Kubernetes types
+		{Kind: "PersistentVolumeClaim", Version: matchAnyValue},
+		{Kind: "ServiceAccount", Version: matchAnyValue},
+		{Kind: "Secret", Version: matchAnyValue},
+		{Kind: "Pod", Version: matchAnyValue},
+		{Kind: "ConfigMap", Version: matchAnyValue},
+		{Kind: "Service", Version: matchAnyValue},
+		{Group: "apps", Kind: "Deployment", Version: matchAnyValue},
+		// OpenShift types
+		{Group: "route.openshift.io", Kind: "Route", Version: matchAnyValue},
+		// Custom resource types
+		{Group: "jenkins.io", Kind: "Jenkins", Version: matchAnyValue},
+		{Group: "jenkins.io", Kind: "JenkinsImage", Version: matchAnyValue},
+	}
+
+	ownGVKs := []schema.GroupVersionKind{}
+	for _, gvk := range gvks {
+		for _, gvkFilter := range gvkFilters {
+			match := true
+			if gvkFilter.Kind == matchAnyValue && gvkFilter.Group == matchAnyValue && gvkFilter.Version == matchAnyValue {
+				log.Log.V(1).Info("gvkFilter should at least have one of its fields defined. Skipping...")
+				match = false
+			} else {
+				if gvkFilter.Kind != matchAnyValue && gvkFilter.Kind != gvk.Kind {
+					match = false
+				}
+				if gvkFilter.Group != matchAnyValue && gvkFilter.Group != gvk.Group {
+					match = false
+				}
+				if gvkFilter.Version != matchAnyValue && gvkFilter.Version != gvk.Version {
+					match = false
+				}
+			}
+			if match {
+				ownGVKs = append(ownGVKs, gvk)
+			}
+		}
+	}
+
+	return ownGVKs
 }
