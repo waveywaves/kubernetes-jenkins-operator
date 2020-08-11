@@ -33,6 +33,9 @@ GIT_COMMIT_ID ?= $(shell git rev-parse --short HEAD)
 OLM_OPERATOR_TAG_SHORT ?= $(OLM_OPERATOR_VERSION)
 OLM_OPERATOR_TAG_LONG ?= $(OLM_OPERATOR_VERSION)-$(GIT_COMMIT_ID)
 
+# e2e vars for Openshift CI
+HACK_DIR := ./openshift-ci/hack
+
 # Set an output prefix, which is the local directory if not specified
 PREFIX?=$(shell pwd)
 VERSION := $(shell cat VERSION.txt)
@@ -572,3 +575,53 @@ olm-publish: olm-image
 olm-release:
 	@echo "check the image here https://quay.io/repository/redhat-developer/openshift-jenkins-operator?tag=$(OLM_OPERATOR_TAG_LONG)&tab=tags"
 	@echo "do a PR simular to this https://github.com/operator-framework/community-operators/pull/1851"
+
+
+# Docker build image for the operator (jenkins-operator:test)
+# Store tag in variable OPERATOR_TEST_IMAGE
+# Tag as parameter to Template
+# Template Contains all necessary resources for test operator
+#
+# make test-install-build (Build the Image for testing)
+# make test-install-deploy-operator (Create Template, use created template with Test Image Parameter)
+# make test-install-deploy-customresource (Create Jenkins Custom Resource for Openshift)
+# make test-install-check (test with client go to see if Operator and Jenkins Pod created are in ready State) (Wait for Jenkins Pod to come up)
+.PHONY: prepare-test-install-build
+test-install-build: ## Build Image for Testing Jenkins Operator installation
+	@echo "+ $@"
+	$(eval CURRENT_COMMIT_ID := $(shell git rev-parse HEAD | cut -c1-7))
+	docker build --no-cache -t jenkins-operator:test-$(CURRENT_COMMIT_ID) --build-arg OLM_OPERATOR_VERSION=$(OLM_OPERATOR_TAG_LONG) -f ./openshift-ci/Dockerfile.build_image .	
+
+#.PHONY: prepare-test-install-deploy-operator
+#prepare-test-install-deploy-operator: ## Prepare artifacts for deploying operator to test
+#	@echo "+ $@"
+#	$(eval CURRENT_NAMESPACE := $(shell kubectl config view --minify --output 'jsonpath={..namespace}'))
+#	mkdir -p ./tmp/artifacts && cp $(HACK_DIR)/e2e/artifacts/*.yaml ./tmp/artifacts
+#	sed -i -e 's,REPLACE_NAMESPACE,$(CURRENT_NAMESPACE),g' ./tmp/artifacts/*.yaml
+#	sed -i -e 's,REPLACE_IMAGE,jenkins-operator:test,g' ./tmp/artifacts/*.yaml	
+
+.PHONY: prepare-test-install-setenv
+prepare-test-install-setenv: ## Clone all the necessary repos needed
+	@echo "+ $@"
+#	git clone https://github.com/operator-framework/operator-marketplace.git -o tmp/operator-marketplace
+	git clone https://github.com/operator-framework/operator-courier.git ./tmp/operator-courier
+#	git clone https://github.com/operator-framework/operator-lifecycle-manager.git -o tmp/operator-lifecycle-manager 
+
+.PHONY: prepare-test-install-aggregate
+prepare-test-install-aggregate: ## Prepare artifacts for testing installation 
+	@echo "+ $@"
+	$(eval CURRENT_NAMESPACE := $(shell kubectl config view --minify --output 'jsonpath={..namespace}'))
+	mkdir -p ./tmp/manifests && cp -r $(HACK_DIR)/e2e/manifests/* ./tmp/manifests
+	sed -i -e 's,placeholder,$(CURRENT_NAMESPACE),g' ./tmp/manifests/*.yaml
+	$(eval CURRENT_COMMIT_ID := $(shell git rev-parse HEAD | cut -c1-7))
+	
+	operator-courier verify ./tmp/manifests/
+
+.PHONY: prepare-test-install-push
+prepare-test-install-push: ## Push the prepared Bundle to quay
+	@echo "+ $@"
+	echo "$(QUAY_BOT_USERNAME)"
+
+
+.PHONY: prepare-test-install
+prepare-test-install: prepare-test-install-setenv prepare-test-install-aggregate prepare-test-install-push
