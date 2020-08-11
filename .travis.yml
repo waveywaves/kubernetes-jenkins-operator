@@ -1,7 +1,6 @@
 language: go
 os: linux
-go_import_path: github.com/jenkinsci/kubernetes-operator
-
+go_import_path: github.com/redhat-developer/jenkins-operator
 
 env:
   global:
@@ -11,6 +10,8 @@ env:
     - MINIKUBE_WANTREPORTERRORPROMPT=false
     - MINIKUBE_HOME=$HOME
     - KUBECONFIG=$HOME/.kube/config
+    - secure: "VYyM5u6gu1ek2gm3auFdpXLOAMbmNoCAbEc1ehj0Gqm1Dy0fv4xJcAYEMwOeJGD3qaYRqI8eTKTNq+353xlIaJ0wIWD8z1xGKeU7mryrXcXRjl18cRwTl694B7mQEDjNU45tIFP8z6w7c4yrss/GaUHkdcidLcmqYFXHhCn28gTIsh5SEyZn3u4k8B91i2P1mqf1FmrE4Ausie//NJnWopD5FVSzpXWYAhyOGxtano2LeR8PrkuFyl+EP023vyvR2Fxok4u1WbcdOJNA4LJDUDfaNwCB07x3xrP9D/fWtPUPXowzHjWcOaDcxqnSHuAsJulGpkugFXL7VdXxkoYlL+rgkc9HUh1jUyemODjCAWMpKye1jHk+CGTJOoCwRmseNoUKFwsObpY+hFYjn8056zZMZ+U681P/dAKarbcUGVvLO9V9PWEKLbm5lVbCrbiajiFm7cCYVweN2iCf5dm0twVUYNvLg93p/f36zDRgiobxPmD5tmAdtbgknXE5l94OBX6ewOQuRg/ljbBTNgi7pr/cDmrG7jaXfNxVG+S51SK9Bme3KR6rgXslZO7PuxuHmscWqdbDxzq9eQT7h7g3JkgU7FtnnZZlLAKt+qfnl9pVecohYhF94uJy11oAyyIdr/RRlJInyTxCA9vdqOrqinsuSxhRA1Eo1UczL8LII6U="
+    - secure: "TmJKjUA+/giIEJ8edD0YwWFb7WwTHkVypyaGG0FM2nQJk2Sla9Z+oCbAGUbt8sVG36WSjJBH5G/OvPvLd4im2quHyxn3a776r0BtxUfeTO/Qpr8Sz0jXfPp0rFYmApK6CpPyTT5Iw8BwwBwup6NJD6wJEjIX8nzbbpf/hk+NZxLfHE6Udj6y1AlSimhbg0Bk/mFpdPDsNMudCsKjc8yJQDOh1i5fFiTbzcqeK57VLsRvpZzE+sxJC1TZXK/iYerHd1qrkcbjFNB6GSLFKO107Qn/zfwDdtX2YToVh7EGHJhTXtmaegKqN0e6TkxkMeVYfRlwfme3FXSX1biOg++7WTeSXN8YFfdMwIJHof9IjtE06DhPl2bhCLPJbWkFDClrfP2lODZyZO4K91P0jNgrk2IdCJO4vmWuD1vrQTeg9QcN/s4wJgqzEQRIk9+4OR3CjQob8wYt2l8vuXjvQuKCBocXnMJ+WpA8QmjP8SwiK1e+YMhMxNRQHZZCwPYSr5UhSnA3SnrYg5NjiDj7yVv5RGjY2OLndp8jP2d67HB82fIrRfjd/+ermwgqMhMXf+YHQkrXFwIu5IP219yq80JgbVFTeBet9t+/3Pv7XnLtDa9wibj+ZEeXQ+bYWrnex189h66SWeioOJrzI2PINXnCabPVY+KA7110K3gx3Be83gM="  
 
 go:
   - 1.14.x
@@ -35,9 +36,19 @@ before_install:
       exit
     fi
   - make go-dependencies
+  - sudo apt-get update -y
+  - sudo apt-get install software-properties-common -y
+  - sudo add-apt-repository ppa:deadsnakes/ppa -y
+  - sudo apt-get update -y
+  - sudo apt-get install python3.7 -y
+  - sudo apt-get install python3.7-venv -y
 
 jobs:
   include:
+    - stage: push-to-quay
+      name: "Red Hat Developer - Push to Quay"
+      script:
+        - make prepare-test-install
     - stage: unit
       name: "Jenkins Operator - unit tests"
       script:

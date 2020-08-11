@@ -35,6 +35,8 @@ OLM_OPERATOR_TAG_LONG ?= $(OLM_OPERATOR_VERSION)-$(GIT_COMMIT_ID)
 
 # e2e vars for Openshift CI
 HACK_DIR := ./openshift-ci/hack
+TMP_DIR := ./tmp
+PYTHON_VENV_DIR=$(TMP_DIR)/venv3
 
 # Set an output prefix, which is the local directory if not specified
 PREFIX?=$(shell pwd)
@@ -603,24 +605,31 @@ test-install-build: ## Build Image for Testing Jenkins Operator installation
 .PHONY: prepare-test-install-setenv
 prepare-test-install-setenv: ## Clone all the necessary repos needed
 	@echo "+ $@"
+	@python3.7 -m venv $(PYTHON_VENV_DIR)
+	@$(PYTHON_VENV_DIR)/bin/pip install --upgrade setuptools
+	@$(PYTHON_VENV_DIR)/bin/pip install --upgrade pip
+	@$(PYTHON_VENV_DIR)/bin/pip install operator-courier==2.1.2
+	@$(PYTHON_VENV_DIR)/bin/operator-courier --version
 #	git clone https://github.com/operator-framework/operator-marketplace.git -o tmp/operator-marketplace
-	git clone https://github.com/operator-framework/operator-courier.git ./tmp/operator-courier
+#   git clone https://github.com/operator-framework/operator-courier.git ./tmp/operator-courier
 #	git clone https://github.com/operator-framework/operator-lifecycle-manager.git -o tmp/operator-lifecycle-manager 
 
 .PHONY: prepare-test-install-aggregate
 prepare-test-install-aggregate: ## Prepare artifacts for testing installation 
 	@echo "+ $@"
 	$(eval CURRENT_NAMESPACE := $(shell kubectl config view --minify --output 'jsonpath={..namespace}'))
-	mkdir -p ./tmp/manifests && cp -r $(HACK_DIR)/e2e/manifests/* ./tmp/manifests
-	sed -i -e 's,placeholder,$(CURRENT_NAMESPACE),g' ./tmp/manifests/*.yaml
+	mkdir -p $(TMP_DIR)/manifests && cp -r $(HACK_DIR)/e2e/manifests/* $(TMP_DIR)/manifests
+	#sed -i -e 's,placeholder,$(CURRENT_NAMESPACE),g' $(TMP_DIR)/manifests/*.yaml
 	$(eval CURRENT_COMMIT_ID := $(shell git rev-parse HEAD | cut -c1-7))
 	
-	operator-courier verify ./tmp/manifests/
+	@$(PYTHON_VENV_DIR)/bin/operator-courier verify $(TMP_DIR)/manifests/
 
 .PHONY: prepare-test-install-push
 prepare-test-install-push: ## Push the prepared Bundle to quay
 	@echo "+ $@"
-	echo "$(QUAY_BOT_USERNAME)"
+	@docker login quay.io -u "$(QUAY_BOT_USERNAME)" -p $(QUAY_BOT_PASSWORD) 
+	$(eval CURRENT_COMMIT_ID := $(shell git rev-parse HEAD | cut -c1-7))
+	operator-courier push $(TMP_DIR)/manifests redhat-developer openshift-jenkins-operator install-test-$(CURRENT_COMMIT_ID) $(QUAY_BOT_PASSWORD)
 
 
 .PHONY: prepare-test-install
