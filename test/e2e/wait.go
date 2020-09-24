@@ -32,7 +32,7 @@ var (
 	retryInterval               = time.Second * 5
 	timeout                     = time.Second * 60
 	namespaceTerminationTimeout = time.Second * 120
-	retries                     = 30
+	retries                     = 120
 )
 
 // checkConditionFunc is used to check if a condition for the jenkins CR is set
@@ -124,6 +124,53 @@ func waitForJenkinsPodRecreation(t *testing.T, jenkins *v1alpha2.Jenkins) {
 		t.Fatal(err)
 	}
 	t.Log("Jenkins pod has been recreated")
+}
+
+func waitForJenkinsPodReady(t *testing.T, jenkins *v1alpha2.Jenkins) {
+	t.Logf("Waiting for Jenkins Master Pod to be ready: Will every %+v until %v", retryInterval, 30*retryInterval)
+	IsJenkinsMasterPodRecreated := func() (bool, error) {
+		lo := metav1.ListOptions{
+			LabelSelector: labels.SelectorFromSet(resources.BuildResourceLabels(jenkins)).String(),
+		}
+		podList, err := framework.Global.KubeClient.CoreV1().Pods(jenkins.ObjectMeta.Namespace).List(lo)
+		if err != nil {
+			t.Logf("Error while listing Jenkins Pods List : %+v \n Error: %+v", podList, err)
+			return false, err
+		}
+		pods := podList.Items
+		if len(pods) != 1 {
+			if len(pods) == 2 {
+				t.Logf("Two pods are present for the Deployment selector")
+				for i, p := range pods {
+					t.Logf("Pod no. %d is in the %s Status.Phase", i, p.Status.Phase)
+				}
+				return false, nil
+			}
+			return false, nil
+		} else if len(pods) == 1 {
+			jenkinsPod := pods[0]
+			t.Logf("Detected single Jenkins Pod %s for given selector with DeletionTimestamp %s", jenkinsPod.Name, jenkinsPod.DeletionTimestamp)
+			podStatus := jenkinsPod.Status
+			containerStatus := podStatus.ContainerStatuses
+			if containerStatus != nil {
+				for _, cs := range containerStatus {
+					if !cs.Ready {
+						t.Logf("Container Pod %s in State: %s, Readiness: %+v", cs.Name, cs.State.String(), cs.Ready)
+						return false, nil
+					}
+				}
+				return true, nil
+			}
+			return false, nil
+		}
+		return false, err
+	}
+	err := wait.Poll(retryInterval, 30*retryInterval, IsJenkinsMasterPodRecreated)
+	if err != nil {
+		t.Errorf("Waiting for Jenkins Master Pod to create failed with jenkins: %+v", jenkins)
+		t.Fatal(err)
+	}
+	t.Log("Jenkins pod has been created and all containers are running")
 }
 
 func waitForJenkinsUserConfigurationToComplete(t *testing.T, casc *v1alpha3.Casc) {

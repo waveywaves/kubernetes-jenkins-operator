@@ -152,6 +152,9 @@ func createJenkinsCR(t *testing.T, name, namespace, priorityClassName string, se
 				Annotations: annotations,
 				Containers: []v1alpha2.Container{
 					{
+						Env: []corev1.EnvVar{
+							{Name: "DISABLE_ADMINISTRATIVE_MONITORS", Value: "true"},
+						},
 						Name: resources.JenkinsMasterContainerName,
 						ReadinessProbe: &corev1.Probe{
 							Handler: corev1.Handler{
@@ -308,7 +311,7 @@ func verifyJenkinsAPIConnection(t *testing.T, jenkins *v1alpha2.Jenkins, namespa
 		t.Fatal(err)
 	}
 
-	t.Log("I can establish connection to Jenkins API")
+	t.Log("Established connection to Jenkins API")
 	return client, cleanUpFunc
 }
 

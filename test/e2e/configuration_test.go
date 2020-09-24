@@ -126,6 +126,7 @@ func TestPlugins(t *testing.T) {
 	}
 
 	jenkins := createJenkinsCR(t, "k8s-e2e", namespace, priorityClassName, seedJobs)
+	waitForJenkinsPodReady(t, jenkins)
 	waitForJenkinsBaseConfigurationToComplete(t, jenkins)
 
 	jenkinsClient, cleanUpFunc := verifyJenkinsAPIConnection(t, jenkins, namespace)
