@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/jenkinsci/kubernetes-operator/api/v1alpha2"
-	jenkinsclient "github.com/jenkinsci/kubernetes-operator/pkg/client"
 	"github.com/jenkinsci/kubernetes-operator/pkg/configuration/base/resources"
+	jenkinsclient "github.com/jenkinsci/kubernetes-operator/pkg/jenkinsclient"
 	"github.com/jenkinsci/kubernetes-operator/pkg/log"
 	"github.com/jenkinsci/kubernetes-operator/pkg/notifications/event"
 	stackerr "github.com/pkg/errors"

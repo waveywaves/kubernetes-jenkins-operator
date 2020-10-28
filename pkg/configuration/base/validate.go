@@ -19,9 +19,10 @@ import (
 
 var dockerImageRegexp = regexp.MustCompile(`^` + docker.TagRegexp.String() + `$`)
 
-var defaultConfigMap = &corev1.ConfigMap{
-	Data: map[string]string{
-		"01-basic-settings.yaml": `
+var defaultJCasCProfile = &v1alpha2.JCasCProfile{
+	Spec: v1alpha2.JCasCProfileSpec{
+		Config: map[string]string{
+			"01-basic-settings.yaml": `
 groovy:
       - script: >
           import jenkins.model.Jenkins;
@@ -35,7 +36,7 @@ groovy:
           jenkins.setMode(Mode.EXCLUSIVE);
           jenkins.save();`,
 
-		"02-enable-csrf.yaml": `
+			"02-enable-csrf.yaml": `
 groovy:
       - script: >
           import hudson.security.csrf.DefaultCrumbIssuer;
@@ -51,7 +52,7 @@ groovy:
               println('CSRF Protection already configured.');
           }`,
 
-		"03-disable-stats.yaml": `
+			"03-disable-stats.yaml": `
 groovy:
       - script: >
           import jenkins.model.Jenkins;
@@ -66,7 +67,7 @@ groovy:
               println('Nothing changed.  Usage stats are not submitted to the Jenkins project.');                                                                              
           }`,
 
-		"04-enable-master-control.yaml": `
+			"04-enable-master-control.yaml": `
 groovy:
       - script: >
           import jenkins.security.s2m.AdminWhitelistRule;
@@ -77,7 +78,7 @@ groovy:
           jenkins.getInjector().getInstance(AdminWhitelistRule.class).setMasterKillSwitch(false); // for real though, false equals enabled..........                           
           jenkins.save();`,
 
-		"05-disable-insecure.yaml": `
+			"05-disable-insecure.yaml": `
 groovy:
       - script: >
           import jenkins.*;
@@ -114,7 +115,7 @@ groovy:
 
           jenkins.save();`,
 
-		"06-configure-views.yaml": `
+			"06-configure-views.yaml": `
 groovy:
       - script: >
           import hudson.model.ListView;
@@ -139,7 +140,7 @@ groovy:
 
           jenkins.save();`,
 
-		"07-disable-dsl-approval.yaml": `
+			"07-disable-dsl-approval.yaml": `
 groovy:
       - script: >
           import jenkins.model.Jenkins;
@@ -149,6 +150,7 @@ groovy:
           // disable Job DSL script approval
           GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).useScriptSecurity=false;                                                                      
           GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).save();`,
+		},
 	},
 }
 
@@ -501,7 +503,7 @@ func (r *JenkinsReconcilerBaseConfiguration) verifyBasePlugins(requiredBasePlugi
 
 func (r *JenkinsReconcilerBaseConfiguration) validateConfiguration(configuration v1alpha2.Configuration, name string) ([]string, error) {
 	var messages []string
-	if len(configuration.Secret.Name) > 0 && len(configuration.Configurations) == 0 {
+	if len(configuration.Secret.Name) > 0 && len(configuration.JCasCProfiles) == 0 {
 		messages = append(messages, fmt.Sprintf("%s.secret.name is set but %s.configurations is empty", name, name))
 	}
 
@@ -515,30 +517,30 @@ func (r *JenkinsReconcilerBaseConfiguration) validateConfiguration(configuration
 		}
 	}
 
-	for index, configMapRef := range configuration.Configurations {
-		if len(configMapRef.Name) == 0 {
+	for index, jcascprofileRef := range configuration.JCasCProfiles {
+		if len(jcascprofileRef) == 0 {
 			messages = append(messages, fmt.Sprintf("%s.configurations[%d] name is empty", name, index))
 			continue
 		}
 
-		configMap := &corev1.ConfigMap{}
-		err := r.Client.Get(context.TODO(), types.NamespacedName{Name: configMapRef.Name, Namespace: jenkinsInstanceNamespace}, configMap)
+		configMap := &v1alpha2.JCasCProfile{}
+		err := r.Client.Get(context.TODO(), types.NamespacedName{Name: jcascprofileRef, Namespace: jenkinsInstanceNamespace}, configMap)
 		if err != nil {
-			messages = append(messages, fmt.Sprintf("ConfigMap '%s' configured in %s.configurations[%d] but not found", configMapRef.Name, name, index))
+			messages = append(messages, fmt.Sprintf("ConfigMap '%s' configured in %s.configurations[%d] but not found", jcascprofileRef, name, index))
 			return messages, stackerr.WithStack(err)
 		}
 	}
-	if configuration.DefaultConfig {
-		configMap := &corev1.ConfigMap{}
-		err := r.Client.Get(context.TODO(), types.NamespacedName{Name: resources.JenkinsDefaultConfigMapName, Namespace: jenkinsInstanceNamespace}, configMap)
+	if configuration.UseDefault {
+		jcascProfile := &v1alpha2.JCasCProfile{}
+		err := r.Client.Get(context.TODO(), types.NamespacedName{Name: resources.JenkinsDefaultConfigName, Namespace: jenkinsInstanceNamespace}, jcascProfile)
 		if err != nil {
 			if apierrors.IsNotFound(err) {
-				r.logger.Info(fmt.Sprintf("Default config is enabled but Default ConfigMap '%s' is not found, creating Default ConfigMap ", resources.JenkinsDefaultConfigMapName))
-				defaultConfigMap.Namespace = jenkinsInstanceNamespace
-				defaultConfigMap.Name = resources.JenkinsDefaultConfigMapName
-				err = r.Client.Create(context.TODO(), defaultConfigMap)
+				r.logger.Info(fmt.Sprintf("Default JCasCProfile is enabled but '%s' was not found, creating Default JCasCProfile ", resources.JenkinsDefaultConfigName))
+				defaultJCasCProfile.Namespace = jenkinsInstanceNamespace
+				defaultJCasCProfile.Name = resources.JenkinsDefaultConfigName
+				err = r.Client.Create(context.TODO(), defaultJCasCProfile)
 				if err != nil {
-					messages = append(messages, fmt.Sprintf("Not able to create Default ConfigMap %s", resources.JenkinsDefaultConfigMapName))
+					messages = append(messages, fmt.Sprintf("Not able to create Default ConfigMap %s", resources.JenkinsDefaultConfigName))
 				}
 			}
 			return messages, stackerr.WithStack(err)

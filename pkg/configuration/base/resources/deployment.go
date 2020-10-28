@@ -30,7 +30,6 @@ func NewJenkinsDeployment(objectMeta metav1.ObjectMeta, jenkins *v1alpha2.Jenkin
 				Spec: corev1.PodSpec{
 					ServiceAccountName: serviceAccountName,
 					NodeSelector:       jenkins.Spec.Master.NodeSelector,
-					InitContainers:     newInitContainers(jenkins),
 					Containers:         newContainers(jenkins),
 					Volumes:            append(GetJenkinsMasterPodBaseVolumes(jenkins), jenkins.Spec.Master.Volumes...),
 					SecurityContext:    jenkins.Spec.Master.SecurityContext,
@@ -46,5 +45,10 @@ func NewJenkinsDeployment(objectMeta metav1.ObjectMeta, jenkins *v1alpha2.Jenkin
 
 // GetJenkinsDeploymentName returns Jenkins deployment name for given CR
 func GetJenkinsDeploymentName(jenkins *v1alpha2.Jenkins) string {
-	return fmt.Sprintf("jenkins-%s", jenkins.Name)
+	return CreateJenkinsDeploymentName(jenkins.Name)
+}
+
+// CreateJenkinsDeploymentName
+func CreateJenkinsDeploymentName(name string) string {
+	return fmt.Sprintf("jenkins-%s", name)
 }

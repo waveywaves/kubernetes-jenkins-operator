@@ -1,0 +1,31 @@
+apiVersion: jenkins.io/v1alpha2
+kind: JCasCProfile
+metadata:
+  name: jcascprofile-sample
+spec:
+  # Add fields here
+  config:
+    "01-basic-settings.yaml": >-
+      groovy:
+      - script: >
+          import jenkins.model.Jenkins;
+          import jenkins.model.JenkinsLocationConfiguration;
+          import hudson.model.Node.Mode;
+
+          def jenkins = Jenkins.instance;
+          //Number of jobs that run simultaneously on master.
+          jenkins.setNumExecutors(6);
+          //Jobs must specify that they want to run on master
+          jenkins.setMode(Mode.EXCLUSIVE);
+          jenkins.save();groovy:
+      - script: >
+          import jenkins.model.Jenkins;
+          import jenkins.model.JenkinsLocationConfiguration;
+          import hudson.model.Node.Mode;
+
+          def jenkins = Jenkins.instance;
+          //Number of jobs that run simultaneously on master.
+          jenkins.setNumExecutors(6);
+          //Jobs must specify that they want to run on master
+          jenkins.setMode(Mode.EXCLUSIVE);
+          jenkins.save();

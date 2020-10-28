@@ -10,8 +10,8 @@ require (
 	github.com/elazarl/goproxy/ext v0.0.0-20190711103511-473e67f1d7d2 // indirect
 	github.com/emersion/go-sasl v0.0.0-20190817083125-240c8404624e // indirect
 	github.com/emersion/go-smtp v0.11.2
-	github.com/go-logr/logr v0.1.0
-	github.com/go-logr/zapr v0.1.1
+	github.com/go-logr/logr v0.2.1
+	github.com/go-logr/zapr v0.2.0
 	github.com/golang/mock v1.3.1
 	github.com/golangci/golangci-lint v1.26.0 // indirect
 	github.com/google/go-cmp v0.5.2 // indirect
@@ -29,19 +29,22 @@ require (
 	github.com/stretchr/testify v1.5.1
 	go.uber.org/zap v1.14.1
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
-	golang.org/x/net v0.0.0-20200822124328-c89045814202 // indirect
-	golang.org/x/tools v0.0.0-20201002184944-ecd9fd270d5d // indirect
+	golang.org/x/tools v0.0.0-20201023174141-c8cfbd0f21e6 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	k8s.io/api v0.18.6
 	k8s.io/apimachinery v0.18.6
 	k8s.io/cli-runtime v0.18.2
 	k8s.io/client-go v12.0.0+incompatible
+	k8s.io/code-generator v0.19.3 // indirect
+	k8s.io/gengo v0.0.0-20200728071708-7794989d0000 // indirect
+	k8s.io/klog v1.0.0
+	k8s.io/klog/v2 v2.3.0 // indirect
 	k8s.io/kubectl v0.18.2
 	k8s.io/kubernetes v1.13.0
-	k8s.io/utils v0.0.0-20190801114015-581e00157fb1
+	k8s.io/utils v0.0.0-20200603063816-c1c6865ac451
 	mvdan.cc/gofumpt v0.0.0-20200927160801-5bfeb2e70dd6 // indirect
-	sigs.k8s.io/controller-runtime v0.6.2
+	sigs.k8s.io/controller-runtime v0.6.3
 )
 
 // Pinned to kubernetes-1.16.2

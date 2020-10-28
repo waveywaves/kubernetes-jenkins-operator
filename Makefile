@@ -57,6 +57,11 @@ docker-build: test ## Build the docker image
 docker-push: ## Push the docker image
 	docker push ${IMG}
 
+docker-build-sidecar: ## Build the docker image for Jenkins Sidecar
+	docker build -f sidecar.Dockerfile -t ${SIDECAR_IMG} .
+
+docker-push-sidecar: ## Push the docker image for Jenkins Sidecar
+	docker push ${SIDECAR_IMG}
 
 bundle-build: ## Build the bundle image.
 	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .

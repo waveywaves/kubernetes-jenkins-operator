@@ -4,9 +4,9 @@ metadata:
   name: jenkins-sample
 spec:
   configurationAsCode:
-    configurations: []
+    jCascProfiles: []
     enabled: true
-    defaultConfig: true
+    useDefault: true
     enableAutoReload: true
   jenkinsAPISettings:
     authorizationStrategy: serviceAccount

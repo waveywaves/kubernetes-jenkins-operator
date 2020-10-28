@@ -6,10 +6,10 @@ import (
 	"testing"
 
 	"github.com/jenkinsci/kubernetes-operator/api/v1alpha2"
-	"github.com/jenkinsci/kubernetes-operator/pkg/client"
 	"github.com/jenkinsci/kubernetes-operator/pkg/configuration"
 	"github.com/jenkinsci/kubernetes-operator/pkg/configuration/base/resources"
 	"github.com/jenkinsci/kubernetes-operator/pkg/constants"
+	"github.com/jenkinsci/kubernetes-operator/pkg/jenkinsclient"
 	"github.com/jenkinsci/kubernetes-operator/pkg/log"
 	"github.com/jenkinsci/kubernetes-operator/pkg/plugins"
 	"github.com/stretchr/testify/assert"
@@ -24,7 +24,7 @@ const defaultNamespace = "default"
 func TestValidatePlugins(t *testing.T) {
 	log.SetupLogger(true)
 	jenkins := &v1alpha2.Jenkins{ObjectMeta: metav1.ObjectMeta{Name: "example"}}
-	baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, client.JenkinsAPIConnectionSettings{})
+	baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, jenkinsclient.JenkinsAPIConnectionSettings{})
 	t.Run("empty", func(t *testing.T) {
 		var requiredBasePlugins []plugins.Plugin
 		var basePlugins []v1alpha2.Plugin
@@ -167,7 +167,7 @@ func TestJenkinsReconcilerBaseConfiguration_validateImagePullSecrets(t *testing.
 		baseReconcileLoop := New(configuration.Configuration{
 			Client:  fakeClient,
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got, err := baseReconcileLoop.validateImagePullSecrets()
 		fmt.Println(got)
@@ -191,7 +191,7 @@ func TestJenkinsReconcilerBaseConfiguration_validateImagePullSecrets(t *testing.
 		baseReconcileLoop := New(configuration.Configuration{
 			Client:  fakeClient,
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got, _ := baseReconcileLoop.validateImagePullSecrets()
 
@@ -227,7 +227,7 @@ func TestJenkinsReconcilerBaseConfiguration_validateImagePullSecrets(t *testing.
 		baseReconcileLoop := New(configuration.Configuration{
 			Client:  fakeClient,
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got, _ := baseReconcileLoop.validateImagePullSecrets()
 
@@ -263,7 +263,7 @@ func TestJenkinsReconcilerBaseConfiguration_validateImagePullSecrets(t *testing.
 		baseReconcileLoop := New(configuration.Configuration{
 			Client:  fakeClient,
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got, _ := baseReconcileLoop.validateImagePullSecrets()
 
@@ -299,7 +299,7 @@ func TestJenkinsReconcilerBaseConfiguration_validateImagePullSecrets(t *testing.
 		baseReconcileLoop := New(configuration.Configuration{
 			Client:  fakeClient,
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got, _ := baseReconcileLoop.validateImagePullSecrets()
 
@@ -335,7 +335,7 @@ func TestJenkinsReconcilerBaseConfiguration_validateImagePullSecrets(t *testing.
 		baseReconcileLoop := New(configuration.Configuration{
 			Client:  fakeClient,
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got, _ := baseReconcileLoop.validateImagePullSecrets()
 
@@ -368,7 +368,7 @@ func TestValidateJenkinsMasterPodEnvs(t *testing.T) {
 		}
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		got := baseReconcileLoop.validateJenkinsMasterPodEnvs()
 		assert.Nil(t, got)
 	})
@@ -391,7 +391,7 @@ func TestValidateJenkinsMasterPodEnvs(t *testing.T) {
 		}
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		got := baseReconcileLoop.validateJenkinsMasterPodEnvs()
 
 		assert.Equal(t, got, []string{"Jenkins Master container env 'JAVA_OPTS' doesn't have required flag '-Djava.awt.headless=true'"})
@@ -415,7 +415,7 @@ func TestValidateJenkinsMasterPodEnvs(t *testing.T) {
 		}
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		got := baseReconcileLoop.validateJenkinsMasterPodEnvs()
 
 		assert.Equal(t, got, []string{"Jenkins Master container env 'JAVA_OPTS' doesn't have required flag '-Djenkins.install.runSetupWizard=false'"})
@@ -437,7 +437,7 @@ func TestValidateReservedVolumes(t *testing.T) {
 		}
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		got := baseReconcileLoop.validateReservedVolumes()
 		assert.Nil(t, got)
 	})
@@ -455,7 +455,7 @@ func TestValidateReservedVolumes(t *testing.T) {
 		}
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		got := baseReconcileLoop.validateReservedVolumes()
 
 		assert.Equal(t, got, []string{"Jenkins Master pod volume 'jenkins-home' is reserved please choose different one"})
@@ -471,7 +471,7 @@ func TestValidateContainerVolumeMounts(t *testing.T) {
 		}
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		got := baseReconcileLoop.validateContainerVolumeMounts(v1alpha2.Container{})
 		assert.Nil(t, got)
 	})
@@ -499,7 +499,7 @@ func TestValidateContainerVolumeMounts(t *testing.T) {
 		}
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		got := baseReconcileLoop.validateContainerVolumeMounts(jenkins.Spec.Master.Containers[0])
 		assert.Nil(t, got)
 	})
@@ -527,7 +527,7 @@ func TestValidateContainerVolumeMounts(t *testing.T) {
 		}
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		got := baseReconcileLoop.validateContainerVolumeMounts(jenkins.Spec.Master.Containers[0])
 		assert.Equal(t, got, []string{"mountPath not set for 'example' volume mount in container ''"})
 	})
@@ -550,7 +550,7 @@ func TestValidateContainerVolumeMounts(t *testing.T) {
 		}
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: &jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		got := baseReconcileLoop.validateContainerVolumeMounts(jenkins.Spec.Master.Containers[0])
 
 		assert.Equal(t, got, []string{"Not found volume for 'missing-volume' volume mount in container ''"})
@@ -573,7 +573,7 @@ func TestValidateConfigMapVolume(t *testing.T) {
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: &v1alpha2.Jenkins{ObjectMeta: metav1.ObjectMeta{Name: "example"}},
 			Client:  fakeClient,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got, err := baseReconcileLoop.validateConfigMapVolume(volume)
 
@@ -601,7 +601,7 @@ func TestValidateConfigMapVolume(t *testing.T) {
 		baseReconcileLoop := New(configuration.Configuration{
 			Client:  fakeClient,
 			Jenkins: jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got, err := baseReconcileLoop.validateConfigMapVolume(volume)
 
@@ -627,7 +627,7 @@ func TestValidateConfigMapVolume(t *testing.T) {
 		baseReconcileLoop := New(configuration.Configuration{
 			Client:  fakeClient,
 			Jenkins: jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got, err := baseReconcileLoop.validateConfigMapVolume(volume)
 
@@ -652,7 +652,7 @@ func TestValidateSecretVolume(t *testing.T) {
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: &v1alpha2.Jenkins{ObjectMeta: metav1.ObjectMeta{Name: "example"}},
 			Client:  fakeClient,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got, err := baseReconcileLoop.validateSecretVolume(volume)
 
@@ -678,7 +678,7 @@ func TestValidateSecretVolume(t *testing.T) {
 		baseReconcileLoop := New(configuration.Configuration{
 			Client:  fakeClient,
 			Jenkins: jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got, err := baseReconcileLoop.validateSecretVolume(volume)
 
@@ -702,7 +702,7 @@ func TestValidateSecretVolume(t *testing.T) {
 		baseReconcileLoop := New(configuration.Configuration{
 			Client:  fakeClient,
 			Jenkins: jenkins,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		got, err := baseReconcileLoop.validateSecretVolume(volume)
 
 		assert.NoError(t, err)
@@ -713,7 +713,7 @@ func TestValidateSecretVolume(t *testing.T) {
 
 func TestValidateConfiguration(t *testing.T) {
 	secretName := "secretName"
-	configMapName := "configmap-name"
+	jcascName := "jcasc-name"
 	jenkins := &v1alpha2.Jenkins{
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace: defaultNamespace,
@@ -725,7 +725,7 @@ func TestValidateConfiguration(t *testing.T) {
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: jenkins,
 			Client:  fakeClient,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got, err := baseReconcileLoop.validateConfiguration(customization, "spec.groovyScripts")
 
@@ -734,8 +734,8 @@ func TestValidateConfiguration(t *testing.T) {
 	})
 	t.Run("secret set but configurations is empty", func(t *testing.T) {
 		customization := v1alpha2.Configuration{
-			Secret:         v1alpha2.SecretRef{Name: secretName},
-			Configurations: []v1alpha2.ConfigMapRef{},
+			Secret:        v1alpha2.SecretRef{Name: secretName},
+			JCasCProfiles: []string{},
 		}
 		secret := &corev1.Secret{
 			ObjectMeta: metav1.ObjectMeta{
@@ -747,7 +747,7 @@ func TestValidateConfiguration(t *testing.T) {
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: jenkins,
 			Client:  fakeClient,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		err := fakeClient.Create(context.TODO(), secret)
 		require.NoError(t, err)
 
@@ -759,12 +759,12 @@ func TestValidateConfiguration(t *testing.T) {
 	})
 	t.Run("secret and configmap exists", func(t *testing.T) {
 		customization := v1alpha2.Configuration{
-			Secret:         v1alpha2.SecretRef{Name: secretName},
-			Configurations: []v1alpha2.ConfigMapRef{{Name: configMapName}},
+			Secret:        v1alpha2.SecretRef{Name: secretName},
+			JCasCProfiles: []string{jcascName},
 		}
-		configMap := &corev1.ConfigMap{
+		configMap := &v1alpha2.JCasCProfile{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      configMapName,
+				Name:      jcascName,
 				Namespace: defaultNamespace,
 			},
 		}
@@ -778,7 +778,7 @@ func TestValidateConfiguration(t *testing.T) {
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: jenkins,
 			Client:  fakeClient,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		err := fakeClient.Create(context.TODO(), secret)
 		require.NoError(t, err)
 		err = fakeClient.Create(context.TODO(), configMap)
@@ -790,14 +790,14 @@ func TestValidateConfiguration(t *testing.T) {
 		assert.Nil(t, got)
 	})
 	t.Run("secret not exists and configmap exists", func(t *testing.T) {
-		configMapName := "configmap-name"
+		jcascName := "jcasc-name"
 		customization := v1alpha2.Configuration{
-			Secret:         v1alpha2.SecretRef{Name: secretName},
-			Configurations: []v1alpha2.ConfigMapRef{{Name: configMapName}},
+			Secret:        v1alpha2.SecretRef{Name: secretName},
+			JCasCProfiles: []string{jcascName},
 		}
 		configMap := &corev1.ConfigMap{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      configMapName,
+				Name:      jcascName,
 				Namespace: defaultNamespace,
 			},
 		}
@@ -805,7 +805,7 @@ func TestValidateConfiguration(t *testing.T) {
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: jenkins,
 			Client:  fakeClient,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		err := fakeClient.Create(context.TODO(), configMap)
 		require.NoError(t, err)
 
@@ -815,8 +815,8 @@ func TestValidateConfiguration(t *testing.T) {
 	})
 	t.Run("secret exists and configmap not exists", func(t *testing.T) {
 		customization := v1alpha2.Configuration{
-			Secret:         v1alpha2.SecretRef{Name: secretName},
-			Configurations: []v1alpha2.ConfigMapRef{{Name: configMapName}},
+			Secret:        v1alpha2.SecretRef{Name: secretName},
+			JCasCProfiles: []string{jcascName},
 		}
 		secret := &corev1.Secret{
 			ObjectMeta: metav1.ObjectMeta{
@@ -828,7 +828,7 @@ func TestValidateConfiguration(t *testing.T) {
 		baseReconcileLoop := New(configuration.Configuration{
 			Jenkins: jenkins,
 			Client:  fakeClient,
-		}, client.JenkinsAPIConnectionSettings{})
+		}, jenkinsclient.JenkinsAPIConnectionSettings{})
 		err := fakeClient.Create(context.TODO(), secret)
 		require.NoError(t, err)
 
@@ -842,7 +842,7 @@ func TestValidateJenkinsMasterContainerCommand(t *testing.T) {
 	log.SetupLogger(true)
 	t.Run("no Jenkins master container", func(t *testing.T) {
 		jenkins := &v1alpha2.Jenkins{}
-		baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, client.JenkinsAPIConnectionSettings{})
+		baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got := baseReconcileLoop.validateJenkinsMasterContainerCommand()
 
@@ -860,7 +860,7 @@ func TestValidateJenkinsMasterContainerCommand(t *testing.T) {
 				},
 			},
 		}
-		baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, client.JenkinsAPIConnectionSettings{})
+		baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got := baseReconcileLoop.validateJenkinsMasterContainerCommand()
 
@@ -883,7 +883,7 @@ func TestValidateJenkinsMasterContainerCommand(t *testing.T) {
 				},
 			},
 		}
-		baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, client.JenkinsAPIConnectionSettings{})
+		baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got := baseReconcileLoop.validateJenkinsMasterContainerCommand()
 
@@ -902,7 +902,7 @@ func TestValidateJenkinsMasterContainerCommand(t *testing.T) {
 				},
 			},
 		}
-		baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, client.JenkinsAPIConnectionSettings{})
+		baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got := baseReconcileLoop.validateJenkinsMasterContainerCommand()
 
@@ -926,7 +926,7 @@ func TestValidateJenkinsMasterContainerCommand(t *testing.T) {
 				},
 			},
 		}
-		baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, client.JenkinsAPIConnectionSettings{})
+		baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got := baseReconcileLoop.validateJenkinsMasterContainerCommand()
 
@@ -950,7 +950,7 @@ func TestValidateJenkinsMasterContainerCommand(t *testing.T) {
 				},
 			},
 		}
-		baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, client.JenkinsAPIConnectionSettings{})
+		baseReconcileLoop := New(configuration.Configuration{Jenkins: jenkins}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got := baseReconcileLoop.validateJenkinsMasterContainerCommand()
 

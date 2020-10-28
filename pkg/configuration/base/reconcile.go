@@ -9,9 +9,9 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
-	jenkinsclient "github.com/jenkinsci/kubernetes-operator/pkg/client"
 	"github.com/jenkinsci/kubernetes-operator/pkg/configuration"
 	"github.com/jenkinsci/kubernetes-operator/pkg/configuration/base/resources"
+	jenkinsclient "github.com/jenkinsci/kubernetes-operator/pkg/jenkinsclient"
 	"github.com/jenkinsci/kubernetes-operator/pkg/log"
 	stackerr "github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"

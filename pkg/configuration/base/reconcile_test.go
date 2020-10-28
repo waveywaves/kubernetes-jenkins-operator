@@ -7,9 +7,9 @@ import (
 	"github.com/bndr/gojenkins"
 	"github.com/golang/mock/gomock"
 	"github.com/jenkinsci/kubernetes-operator/api/v1alpha2"
-	"github.com/jenkinsci/kubernetes-operator/pkg/client"
 	"github.com/jenkinsci/kubernetes-operator/pkg/configuration"
 	"github.com/jenkinsci/kubernetes-operator/pkg/configuration/base/resources"
+	"github.com/jenkinsci/kubernetes-operator/pkg/jenkinsclient"
 	"github.com/jenkinsci/kubernetes-operator/pkg/log"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
@@ -105,7 +105,7 @@ func TestCompareVolumes(t *testing.T) {
 				Volumes:            resources.GetJenkinsMasterPodBaseVolumes(jenkins),
 			},
 		}
-		reconciler := New(configuration.Configuration{Jenkins: jenkins}, client.JenkinsAPIConnectionSettings{})
+		reconciler := New(configuration.Configuration{Jenkins: jenkins}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got := reconciler.compareVolumes(pod)
 
@@ -129,7 +129,7 @@ func TestCompareVolumes(t *testing.T) {
 				Volumes:            resources.GetJenkinsMasterPodBaseVolumes(jenkins),
 			},
 		}
-		reconciler := New(configuration.Configuration{Jenkins: jenkins}, client.JenkinsAPIConnectionSettings{})
+		reconciler := New(configuration.Configuration{Jenkins: jenkins}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got := reconciler.compareVolumes(pod)
 
@@ -153,7 +153,7 @@ func TestCompareVolumes(t *testing.T) {
 				Volumes:            append(resources.GetJenkinsMasterPodBaseVolumes(jenkins), corev1.Volume{Name: "added"}),
 			},
 		}
-		reconciler := New(configuration.Configuration{Jenkins: jenkins}, client.JenkinsAPIConnectionSettings{})
+		reconciler := New(configuration.Configuration{Jenkins: jenkins}, jenkinsclient.JenkinsAPIConnectionSettings{})
 
 		got := reconciler.compareVolumes(pod)
 
@@ -177,7 +177,7 @@ func TestJenkinsReconcilerBaseConfiguration_verifyPlugins(t *testing.T) {
 		}
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		jenkinsClient := client.NewMockJenkins(ctrl)
+		jenkinsClient := jenkinsclient.NewMockJenkins(ctrl)
 		jenkinsClient.EXPECT().GetPlugins(fetchAllPlugins).Return(pluginsInJenkins, nil)
 
 		got, err := r.verifyPlugins(jenkinsClient)
@@ -222,7 +222,7 @@ func TestJenkinsReconcilerBaseConfiguration_verifyPlugins(t *testing.T) {
 		}
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		jenkinsClient := client.NewMockJenkins(ctrl)
+		jenkinsClient := jenkinsclient.NewMockJenkins(ctrl)
 		jenkinsClient.EXPECT().GetPlugins(fetchAllPlugins).Return(pluginsInJenkins, nil)
 
 		got, err := r.verifyPlugins(jenkinsClient)
@@ -259,7 +259,7 @@ func TestJenkinsReconcilerBaseConfiguration_verifyPlugins(t *testing.T) {
 		}
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		jenkinsClient := client.NewMockJenkins(ctrl)
+		jenkinsClient := jenkinsclient.NewMockJenkins(ctrl)
 		jenkinsClient.EXPECT().GetPlugins(fetchAllPlugins).Return(pluginsInJenkins, nil)
 
 		got, err := r.verifyPlugins(jenkinsClient)
@@ -296,7 +296,7 @@ func TestJenkinsReconcilerBaseConfiguration_verifyPlugins(t *testing.T) {
 		}
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		jenkinsClient := client.NewMockJenkins(ctrl)
+		jenkinsClient := jenkinsclient.NewMockJenkins(ctrl)
 		jenkinsClient.EXPECT().GetPlugins(fetchAllPlugins).Return(pluginsInJenkins, nil)
 
 		got, err := r.verifyPlugins(jenkinsClient)
@@ -333,7 +333,7 @@ func TestJenkinsReconcilerBaseConfiguration_verifyPlugins(t *testing.T) {
 		}
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		jenkinsClient := client.NewMockJenkins(ctrl)
+		jenkinsClient := jenkinsclient.NewMockJenkins(ctrl)
 		jenkinsClient.EXPECT().GetPlugins(fetchAllPlugins).Return(pluginsInJenkins, nil)
 
 		got, err := r.verifyPlugins(jenkinsClient)
@@ -370,7 +370,7 @@ func TestJenkinsReconcilerBaseConfiguration_verifyPlugins(t *testing.T) {
 		}
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		jenkinsClient := client.NewMockJenkins(ctrl)
+		jenkinsClient := jenkinsclient.NewMockJenkins(ctrl)
 		jenkinsClient.EXPECT().GetPlugins(fetchAllPlugins).Return(pluginsInJenkins, nil)
 
 		got, err := r.verifyPlugins(jenkinsClient)
@@ -399,7 +399,7 @@ func TestJenkinsReconcilerBaseConfiguration_verifyPlugins(t *testing.T) {
 		}
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		jenkinsClient := client.NewMockJenkins(ctrl)
+		jenkinsClient := jenkinsclient.NewMockJenkins(ctrl)
 		jenkinsClient.EXPECT().GetPlugins(fetchAllPlugins).Return(pluginsInJenkins, nil)
 
 		got, err := r.verifyPlugins(jenkinsClient)
@@ -428,7 +428,7 @@ func TestJenkinsReconcilerBaseConfiguration_verifyPlugins(t *testing.T) {
 		}
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		jenkinsClient := client.NewMockJenkins(ctrl)
+		jenkinsClient := jenkinsclient.NewMockJenkins(ctrl)
 		jenkinsClient.EXPECT().GetPlugins(fetchAllPlugins).Return(pluginsInJenkins, nil)
 
 		got, err := r.verifyPlugins(jenkinsClient)
@@ -636,7 +636,7 @@ func TestEnsureExtraRBAC(t *testing.T) {
 			Jenkins: jenkins,
 			Scheme:  scheme.Scheme,
 		}
-		reconciler := New(config, client.JenkinsAPIConnectionSettings{})
+		reconciler := New(config, jenkinsclient.JenkinsAPIConnectionSettings{})
 		metaObject := resources.NewResourceObjectMeta(jenkins)
 
 		// when
@@ -678,7 +678,7 @@ func TestEnsureExtraRBAC(t *testing.T) {
 			Jenkins: jenkins,
 			Scheme:  scheme.Scheme,
 		}
-		reconciler := New(config, client.JenkinsAPIConnectionSettings{})
+		reconciler := New(config, jenkinsclient.JenkinsAPIConnectionSettings{})
 		metaObject := resources.NewResourceObjectMeta(jenkins)
 
 		// when
@@ -725,7 +725,7 @@ func TestEnsureExtraRBAC(t *testing.T) {
 			Jenkins: jenkins,
 			Scheme:  scheme.Scheme,
 		}
-		reconciler := New(config, client.JenkinsAPIConnectionSettings{})
+		reconciler := New(config, jenkinsclient.JenkinsAPIConnectionSettings{})
 		metaObject := resources.NewResourceObjectMeta(jenkins)
 
 		// when
@@ -773,7 +773,7 @@ func TestEnsureExtraRBAC(t *testing.T) {
 			Jenkins: jenkins,
 			Scheme:  scheme.Scheme,
 		}
-		reconciler := New(config, client.JenkinsAPIConnectionSettings{})
+		reconciler := New(config, jenkinsclient.JenkinsAPIConnectionSettings{})
 		metaObject := resources.NewResourceObjectMeta(jenkins)
 
 		// when

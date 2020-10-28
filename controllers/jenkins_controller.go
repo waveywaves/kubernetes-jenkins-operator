@@ -25,11 +25,11 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/jenkinsci/kubernetes-operator/api/v1alpha2"
-	jenkinsclient "github.com/jenkinsci/kubernetes-operator/pkg/client"
 	"github.com/jenkinsci/kubernetes-operator/pkg/configuration"
 	"github.com/jenkinsci/kubernetes-operator/pkg/configuration/base"
 	"github.com/jenkinsci/kubernetes-operator/pkg/configuration/base/resources"
 	"github.com/jenkinsci/kubernetes-operator/pkg/constants"
+	jenkinsclient "github.com/jenkinsci/kubernetes-operator/pkg/jenkinsclient"
 	"github.com/jenkinsci/kubernetes-operator/pkg/log"
 	"github.com/jenkinsci/kubernetes-operator/pkg/notifications/event"
 	"github.com/jenkinsci/kubernetes-operator/pkg/notifications/reason"
@@ -101,6 +101,8 @@ func (r *JenkinsReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 // +kubebuilder:rbac:groups=jenkins.io,resources=jenkins,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=jenkins.io,resources=jenkins/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=jenkins.io,resources=jcascprofiles,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=jenkins.io,resources=jcascprofiles/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=core,resources=secrets,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=core,resources=configmaps,verbs=get;list;watch;create;update;patch;delete

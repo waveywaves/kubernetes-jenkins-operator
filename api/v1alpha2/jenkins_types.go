@@ -80,19 +80,15 @@ type SecretRef struct {
 	Name string `json:"name"`
 }
 
-// ConfigMapRef is reference to Kubernetes ConfigMap
-type ConfigMapRef struct {
-	Name string `json:"name"`
-}
-
 // Configuration defines a Jenkins Configuration
 type Configuration struct {
 	// +operator-sdk:csv:customresourcedefinitions:type=spec,displayName="Enable this configuration",xDescriptors="urn:alm:descriptor:com.tectonic.ui:booleanSwitch"
-	Enabled          bool           `json:"enabled"`
-	DefaultConfig    bool           `json:"defaultConfig"`
-	Secret           SecretRef      `json:"secret,omitempty"`
-	Configurations   []ConfigMapRef `json:"configurations,omitempty"`
-	EnableAutoReload bool           `json:"enableAutoReload"`
+	Enabled    bool      `json:"enabled"`
+	UseDefault bool      `json:"useDefault"`
+	Secret     SecretRef `json:"secret,omitempty"`
+	// JCasCProfiles contain the JCasCProfile references
+	JCasCProfiles    []string `json:"jCascProfiles,omitempty"`
+	EnableAutoReload bool     `json:"enableAutoReload"`
 }
 
 // ServiceAccount defines Kubernetes service account attributes

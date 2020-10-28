@@ -20,16 +20,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // BackupWorkerSpec defines the desired state of BackupWorker
 type BackupWorkerSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of BackupWorker. Edit BackupWorker_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	JenkinsRef string `json:"jenkinsRef,omitempty"`
 }
 
 // BackupWorkerStatus defines the observed state of BackupWorker

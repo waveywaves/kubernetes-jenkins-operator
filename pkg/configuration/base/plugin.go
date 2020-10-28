@@ -5,7 +5,7 @@ import (
 
 	"github.com/bndr/gojenkins"
 	"github.com/jenkinsci/kubernetes-operator/api/v1alpha2"
-	jenkinsclient "github.com/jenkinsci/kubernetes-operator/pkg/client"
+	jenkinsclient "github.com/jenkinsci/kubernetes-operator/pkg/jenkinsclient"
 	"github.com/jenkinsci/kubernetes-operator/pkg/log"
 	"github.com/jenkinsci/kubernetes-operator/pkg/plugins"
 	stackerr "github.com/pkg/errors"

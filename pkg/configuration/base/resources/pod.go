@@ -41,22 +41,16 @@ const (
 	httpPortName = "http"
 	jnlpPortName = "jnlp"
 
-	// defaut configmap for jenkins configuration
-	JenkinsDefaultConfigMapName = "jenkins-default-configuration"
-
+	// defaut jcascprofile for jenkins configuration
+	JenkinsDefaultConfigName  = "default-jcasc"
+	JenkinsSCConfigCPULimit   = "100m"
+	JenkinsSCConfigMEMLimit   = "100Mi"
+	JenkinsSCConfigCPURequest = "50m"
+	JenkinsSCConfigMEMRequest = "50Mi"
 	// JenkinsSCConfigName is the Jenkins side car container name for reloading config
-	JenkinsSCConfigName            = "jenkins-sc-config"
-	JenkinsSCConfigImage           = "kiwigrid/k8s-sidecar:0.1.144"
-	JenkinsSCConfigImagePullPolicy = "IfNotPresent"
-	JenkinsSCConfigReqURL          = "http://localhost:8080/reload-configuration-as-code/?casc-reload-token=$(POD_NAME)"
-	JenkinsSCConfigReqMethod       = "POST"
-	JenkinsSCConfigReqRetry        = "10"
-	JenkinsSCConfigCPULimit        = "100m"
-	JenkinsSCConfigMEMLimit        = "100Mi"
-	JenkinsSCConfigCPURequest      = "50m"
-	JenkinsSCConfigMEMRequest      = "50Mi"
-	JenkinsSCConfigLabel           = "type"
-	JenkinsSCConfigLabelValue      = "%s-jenkins-config"
+	JenkinsSCConfigName      = "sidecar"
+	JenkinsSCConfigImage     = "docker.io/waveywaves/jenkins-sidecar:0.6.0-edd7eddf"
+	jenkinsPodInfoVolumeName = "podinfo"
 )
 
 // GetJenkinsMasterContainerBaseCommand returns default Jenkins master container command
@@ -128,6 +122,7 @@ func GetJenkinsMasterPodBaseVolumes(jenkins *v1alpha2.Jenkins) []corev1.Volume {
 	configMapVolumeSourceDefaultMode := corev1.ConfigMapVolumeSourceDefaultMode
 	secretVolumeSourceDefaultMode := corev1.SecretVolumeSourceDefaultMode
 	var scriptsVolumeDefaultMode int32 = 0777
+
 	volumes := []corev1.Volume{
 		{
 			Name: JenkinsHomeVolumeName,
@@ -166,56 +161,27 @@ func GetJenkinsMasterPodBaseVolumes(jenkins *v1alpha2.Jenkins) []corev1.Volume {
 				},
 			},
 		},
-	}
-	if jenkins.Spec.ConfigurationAsCode.Enabled {
-		// target volume for the init container
-		// All casc configmaps will be copied here
-		volumes = append(volumes, corev1.Volume{
-			Name: ConfigurationAsCodeVolumeName,
+		{
+			Name: jenkinsPodInfoVolumeName,
 			VolumeSource: corev1.VolumeSource{
-				EmptyDir: &corev1.EmptyDirVolumeSource{},
+				DownwardAPI: &corev1.DownwardAPIVolumeSource{
+					Items: []corev1.DownwardAPIVolumeFile{
+						{
+							FieldRef: &corev1.ObjectFieldSelector{
+								FieldPath: "metadata.labels",
+							},
+							Path: "labels",
+						},
+						{
+							FieldRef: &corev1.ObjectFieldSelector{
+								FieldPath: "metadata.annotations",
+							},
+							Path: "annotations",
+						},
+					},
+				},
 			},
-		})
-		// volume for default config configmap
-		if jenkins.Spec.ConfigurationAsCode.DefaultConfig {
-			volumes = append(volumes, corev1.Volume{
-				Name: fmt.Sprintf("casc-default-%s", JenkinsDefaultConfigMapName),
-				VolumeSource: corev1.VolumeSource{
-					ConfigMap: &corev1.ConfigMapVolumeSource{
-						DefaultMode: &configMapVolumeSourceDefaultMode,
-						LocalObjectReference: corev1.LocalObjectReference{
-							Name: JenkinsDefaultConfigMapName,
-						},
-					},
-				},
-			})
-		}
-		// Loop to add all casc configmap volumes
-		for _, cm := range jenkins.Spec.ConfigurationAsCode.Configurations {
-			volumes = append(volumes, corev1.Volume{
-				Name: fmt.Sprintf("casc-init-%s", cm.Name),
-				VolumeSource: corev1.VolumeSource{
-					ConfigMap: &corev1.ConfigMapVolumeSource{
-						DefaultMode: &configMapVolumeSourceDefaultMode,
-						LocalObjectReference: corev1.LocalObjectReference{
-							Name: cm.Name,
-						},
-					},
-				},
-			})
-		}
-		// Add casc secret volume
-		if len(jenkins.Spec.ConfigurationAsCode.Secret.Name) > 0 {
-			volumes = append(volumes, corev1.Volume{
-				Name: ConfigurationAsCodeSecretVolumeName,
-				VolumeSource: corev1.VolumeSource{
-					Secret: &corev1.SecretVolumeSource{
-						DefaultMode: &secretVolumeSourceDefaultMode,
-						SecretName:  jenkins.Spec.ConfigurationAsCode.Secret.Name,
-					},
-				},
-			})
-		}
+		},
 	}
 
 	return volumes
@@ -244,21 +210,6 @@ func GetJenkinsMasterContainerBaseVolumeMounts(jenkins *v1alpha2.Jenkins) []core
 			MountPath: jenkinsOperatorCredentialsVolumePath,
 			ReadOnly:  true,
 		},
-	}
-
-	if jenkins.Spec.ConfigurationAsCode.Enabled {
-		volumeMounts = append(volumeMounts, corev1.VolumeMount{
-			Name:      ConfigurationAsCodeVolumeName,
-			MountPath: ConfigurationAsCodeVolumePath,
-			ReadOnly:  false,
-		})
-		if len(jenkins.Spec.ConfigurationAsCode.Secret.Name) > 0 {
-			volumeMounts = append(volumeMounts, corev1.VolumeMount{
-				Name:      ConfigurationAsCodeSecretVolumeName,
-				MountPath: ConfigurationAsCodeSecretVolumePath,
-				ReadOnly:  false,
-			})
-		}
 	}
 	return volumeMounts
 }
@@ -317,12 +268,7 @@ func NewJenkinsMasterContainer(jenkins *v1alpha2.Jenkins) corev1.Container {
 // NewJenkinsSCConfigContainer returns Jenkins side container for config reloading
 func NewJenkinsSCConfigContainer(jenkins *v1alpha2.Jenkins) corev1.Container {
 	envs := map[string]string{
-		"LABEL":             JenkinsSCConfigLabel,
-		"LABEL_VALUE":       fmt.Sprintf(JenkinsSCConfigLabelValue, jenkins.Name),
-		"FOLDER":            ConfigurationAsCodeVolumePath,
-		"REQ_URL":           JenkinsSCConfigReqURL,
-		"REQ_METHOD":        JenkinsSCConfigReqMethod,
-		"REQ_RETRY_CONNECT": JenkinsSCConfigReqRetry,
+		"FOLDER": ConfigurationAsCodeVolumePath,
 	}
 
 	envVars := []corev1.EnvVar{
@@ -345,13 +291,13 @@ func NewJenkinsSCConfigContainer(jenkins *v1alpha2.Jenkins) corev1.Container {
 
 	volumeMounts := []corev1.VolumeMount{
 		{
-			Name:      ConfigurationAsCodeVolumeName,
-			MountPath: ConfigurationAsCodeVolumePath,
-			ReadOnly:  false,
-		},
-		{
 			Name:      "jenkins-home",
 			MountPath: getJenkinsHomePath(jenkins),
+			ReadOnly:  true,
+		},
+		{
+			Name:      "podinfo",
+			MountPath: "/pod",
 			ReadOnly:  true,
 		},
 	}
@@ -359,61 +305,8 @@ func NewJenkinsSCConfigContainer(jenkins *v1alpha2.Jenkins) corev1.Container {
 	return corev1.Container{
 		Name:            JenkinsSCConfigName,
 		Image:           JenkinsSCConfigImage,
-		ImagePullPolicy: corev1.PullIfNotPresent,
+		ImagePullPolicy: corev1.PullAlways,
 		Env:             envVars,
-		Resources: corev1.ResourceRequirements{
-			Requests: corev1.ResourceList{
-				corev1.ResourceCPU:    resource.MustParse(JenkinsSCConfigCPURequest),
-				corev1.ResourceMemory: resource.MustParse(JenkinsSCConfigMEMRequest),
-			},
-			Limits: corev1.ResourceList{
-				corev1.ResourceCPU:    resource.MustParse(JenkinsSCConfigCPULimit),
-				corev1.ResourceMemory: resource.MustParse(JenkinsSCConfigMEMLimit),
-			},
-		},
-		VolumeMounts: volumeMounts,
-	}
-}
-
-// NewJenkinsInitContainer returns Jenkins init container to copy configmap to make it writable
-func NewJenkinsInitContainer(jenkins *v1alpha2.Jenkins) corev1.Container {
-	jenkinsContainer := jenkins.Spec.Master.Containers[0]
-	volumeMounts := []corev1.VolumeMount{
-		{
-			Name:      ConfigurationAsCodeVolumeName,
-			MountPath: ConfigurationAsCodeVolumePath,
-			ReadOnly:  false,
-		},
-	}
-
-	if jenkins.Spec.ConfigurationAsCode.DefaultConfig {
-		volumeMounts = append(volumeMounts, corev1.VolumeMount{
-			Name:      fmt.Sprintf("casc-default-%s", JenkinsDefaultConfigMapName),
-			MountPath: jenkinsPath + fmt.Sprintf("/casc-default-%s", JenkinsDefaultConfigMapName),
-			ReadOnly:  false,
-		})
-	}
-
-	if jenkins.Spec.ConfigurationAsCode.Enabled {
-		for _, cm := range jenkins.Spec.ConfigurationAsCode.Configurations {
-			volumeMounts = append(volumeMounts, corev1.VolumeMount{
-				Name:      fmt.Sprintf("casc-init-%s", cm.Name),
-				MountPath: jenkinsPath + fmt.Sprintf("/casc-init-%s", cm.Name),
-				ReadOnly:  false,
-			})
-		}
-	}
-
-	command := []string{
-		"bash",
-		"-c",
-		fmt.Sprintf("if [ `ls %s/casc-* > /dev/null 2>&1; echo $?` -eq 0 ]; then find %s/casc-* -type f -exec cp -fL {} %s \\;; fi", jenkinsPath, jenkinsPath, ConfigurationAsCodeVolumePath),
-	}
-	return corev1.Container{
-		Name:            fmt.Sprintf("init-%s", jenkinsContainer.Name),
-		Image:           jenkinsContainer.Image,
-		ImagePullPolicy: jenkinsContainer.ImagePullPolicy,
-		Command:         command,
 		Resources: corev1.ResourceRequirements{
 			Requests: corev1.ResourceList{
 				corev1.ResourceCPU:    resource.MustParse(JenkinsSCConfigCPURequest),
@@ -458,13 +351,6 @@ func newContainers(jenkins *v1alpha2.Jenkins) (containers []corev1.Container) {
 		containers = append(containers, ConvertJenkinsContainerToKubernetesContainer(container))
 	}
 
-	return
-}
-
-func newInitContainers(jenkins *v1alpha2.Jenkins) (containers []corev1.Container) {
-	if jenkins.Spec.ConfigurationAsCode.Enabled {
-		containers = append(containers, NewJenkinsInitContainer(jenkins))
-	}
 	return
 }
 

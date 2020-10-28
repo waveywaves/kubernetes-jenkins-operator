@@ -3,5 +3,4 @@ kind: BackupWorker
 metadata:
   name: backupworker-sample
 spec:
-  # Add fields here
-  foo: bar
+  jenkinsRef: jenkins-sample

@@ -39,22 +39,15 @@ spec:
               description: ConfigurationAsCode defines configuration of Jenkins configuration
                 via Configuration as Code Jenkins plugin
               properties:
-                configurations:
-                  items:
-                    description: ConfigMapRef is reference to Kubernetes ConfigMap
-                    properties:
-                      name:
-                        type: string
-                    required:
-                    - name
-                    type: object
-                  type: array
-                defaultConfig:
-                  type: boolean
                 enableAutoReload:
                   type: boolean
                 enabled:
                   type: boolean
+                jCascProfiles:
+                  description: JCasCProfiles contain the JCasCProfile references
+                  items:
+                    type: string
+                  type: array
                 secret:
                   description: SecretRef is reference to Kubernetes secret
                   properties:
@@ -63,10 +56,12 @@ spec:
                   required:
                   - name
                   type: object
+                useDefault:
+                  type: boolean
               required:
-              - defaultConfig
               - enableAutoReload
               - enabled
+              - useDefault
               type: object
             jenkinsAPISettings:
               description: JenkinsAPISettings defines configuration used by the operator
