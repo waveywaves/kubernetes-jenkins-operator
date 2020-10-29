@@ -22,14 +22,6 @@ import (
 	"os"
 	currentruntime "runtime"
 
-	jenkinsv1alpha2 "github.com/jenkinsci/kubernetes-operator/api/v1alpha2"
-	"github.com/jenkinsci/kubernetes-operator/controllers"
-	"github.com/jenkinsci/kubernetes-operator/pkg/configuration/base/resources"
-	"github.com/jenkinsci/kubernetes-operator/pkg/constants"
-	"github.com/jenkinsci/kubernetes-operator/pkg/event"
-	"github.com/jenkinsci/kubernetes-operator/pkg/notifications"
-	e "github.com/jenkinsci/kubernetes-operator/pkg/notifications/event"
-	"github.com/jenkinsci/kubernetes-operator/version"
 	routev1 "github.com/openshift/api/route/v1"
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
@@ -43,6 +35,15 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
+
+	jenkinsv1alpha2 "github.com/jenkinsci/kubernetes-operator/api/v1alpha2"
+	"github.com/jenkinsci/kubernetes-operator/controllers"
+	"github.com/jenkinsci/kubernetes-operator/pkg/configuration/base/resources"
+	"github.com/jenkinsci/kubernetes-operator/pkg/constants"
+	"github.com/jenkinsci/kubernetes-operator/pkg/event"
+	"github.com/jenkinsci/kubernetes-operator/pkg/notifications"
+	e "github.com/jenkinsci/kubernetes-operator/pkg/notifications/event"
+	"github.com/jenkinsci/kubernetes-operator/version"
 
 	// sdkVersion "github.com/operator-framework/operator-sdk/version"
 	kzap "sigs.k8s.io/controller-runtime/pkg/log/zap"
@@ -85,6 +86,7 @@ func main() {
 	// setup Jenkins controller
 	setupJenkinsRenconciler(manager, notificationsChannel)
 	setupJenkinsImageRenconciler(manager)
+	setupBackupPoolRenconciler(manager)
 
 	// start the Cmd
 	setupLog.Info("Starting the Cmd.")
@@ -195,7 +197,7 @@ func newJenkinsReconciler(mgr manager.Manager, channel chan e.Event) *controller
 
 func setupJenkinsImageRenconciler(mgr manager.Manager) {
 	if err := newJenkinsImageRenconciler(mgr).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Jenkins")
+		setupLog.Error(err, "unable to create controller", "controller", "JenkinsImage")
 		os.Exit(1)
 	}
 }
@@ -204,6 +206,21 @@ func newJenkinsImageRenconciler(mgr manager.Manager) *controllers.JenkinsImageRe
 	return &controllers.JenkinsImageReconciler{
 		Client: mgr.GetClient(),
 		Log:    ctrl.Log.WithName("controllers").WithName("JenkinsImage"),
+		Scheme: mgr.GetScheme(),
+	}
+}
+
+func setupBackupPoolRenconciler(mgr manager.Manager) {
+	if err := newBackupPoolRenconciler(mgr).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "BackupPool")
+		os.Exit(1)
+	}
+}
+
+func newBackupPoolRenconciler(mgr manager.Manager) *controllers.BackupPoolReconciler {
+	return &controllers.BackupPoolReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("controllers").WithName("BackupPool"),
 		Scheme: mgr.GetScheme(),
 	}
 }

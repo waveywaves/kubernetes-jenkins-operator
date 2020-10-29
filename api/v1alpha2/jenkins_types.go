@@ -58,6 +58,9 @@ type JenkinsSpec struct {
 	// ConfigurationAsCode defines configuration of Jenkins configuration via Configuration as Code Jenkins plugin
 	// +optional
 	ConfigurationAsCode Configuration `json:"configurationAsCode,omitempty"`
+
+	// Backup defines the configuration for Jenkins Backup
+	Backup BackupConfig `json:"backup,omitempty"`
 }
 
 // AuthorizationStrategy defines authorization strategy of the operator for the Jenkins API
@@ -581,6 +584,11 @@ type SeedJob struct {
 	// UnstableOnDeprecation is setting for Job DSL API plugin that sets build status as unstable if build using deprecated features
 	// +optional
 	UnstableOnDeprecation bool `json:"unstableOnDeprecation"`
+}
+
+type BackupConfig struct {
+	Enabled       bool   `json:"enabled"`
+	BackupPoolRef string `json:"backupPoolRef"`
 }
 
 // Handler defines a specific action that should be taken.

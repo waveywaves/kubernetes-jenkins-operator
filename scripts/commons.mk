@@ -1,6 +1,8 @@
 # Current Operator version
 VERSION ?= 0.6.0
 GIT_COMMIT_ID ?= $(shell git rev-parse --short HEAD)
+# Default sidecar image tag
+SIDECAR_IMG ?= docker.io/waveywaves/jenkins-sidecar:$(VERSION)-$(GIT_COMMIT_ID)
 # Default bundle image tag
 BUNDLE_IMG ?= quay.io/redhat-developer/openshift-jenkins-operator-bundle:$(VERSION)
 # Options for 'bundle-build'

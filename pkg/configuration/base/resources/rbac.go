@@ -22,6 +22,9 @@ const (
 
 	// BuildAPIGroup  the openshift api group name for builds
 	BuildAPIGroup = "build.openshift.io"
+
+	// BuildAPIGroup  the openshift api group name for builds
+	JenkinsAPIGroup = "jenkins.io"
 )
 
 // NewRole returns rbac role for jenkins master
@@ -78,6 +81,8 @@ func NewDefaultPolicyRules() []v1.PolicyRule {
 	rules = append(rules, NewOpenShiftPolicyRule(BuildAPIGroup, "buildconfigs", Default))
 	rules = append(rules, NewOpenShiftPolicyRule(BuildAPIGroup, "builds", Default))
 
+	rules = append(rules, NewPolicyRule(JenkinsAPIGroup, "backups", Default))
+	rules = append(rules, NewPolicyRule(JenkinsAPIGroup, "backuppools/status", Default))
 	return rules
 }
 

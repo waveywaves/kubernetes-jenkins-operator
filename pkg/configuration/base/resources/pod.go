@@ -44,19 +44,24 @@ const (
 	// defaut configmap for jenkins configuration
 	JenkinsDefaultConfigMapName = "jenkins-default-configuration"
 
-	// JenkinsSCConfigName is the Jenkins side car container name for reloading config
+	// JenkinsSCConfigName is the name of the Jenkins sidecar container used for reloading config
 	JenkinsSCConfigName            = "jenkins-sc-config"
 	JenkinsSCConfigImage           = "kiwigrid/k8s-sidecar:0.1.144"
 	JenkinsSCConfigImagePullPolicy = "IfNotPresent"
 	JenkinsSCConfigReqURL          = "http://localhost:8080/reload-configuration-as-code/?casc-reload-token=$(POD_NAME)"
 	JenkinsSCConfigReqMethod       = "POST"
 	JenkinsSCConfigReqRetry        = "10"
-	JenkinsSCConfigCPULimit        = "100m"
-	JenkinsSCConfigMEMLimit        = "100Mi"
-	JenkinsSCConfigCPURequest      = "50m"
-	JenkinsSCConfigMEMRequest      = "50Mi"
 	JenkinsSCConfigLabel           = "type"
 	JenkinsSCConfigLabelValue      = "%s-jenkins-config"
+
+	// JenkinsSCBackupName is the name of the Jenkins sidecar container used for triggering backups
+	JenkinsSCBackupName  = "jenkins-sc-backup"
+	JenkinsSCBackupImage = "docker.io/waveywaves/jenkins-sidecar:test-7"
+
+	SidecarCPULimit   = "100m"
+	SidecarMEMLimit   = "100Mi"
+	SidecarCPURequest = "50m"
+	SidecarMEMRequest = "50Mi"
 )
 
 // GetJenkinsMasterContainerBaseCommand returns default Jenkins master container command
@@ -363,12 +368,65 @@ func NewJenkinsSCConfigContainer(jenkins *v1alpha2.Jenkins) corev1.Container {
 		Env:             envVars,
 		Resources: corev1.ResourceRequirements{
 			Requests: corev1.ResourceList{
-				corev1.ResourceCPU:    resource.MustParse(JenkinsSCConfigCPURequest),
-				corev1.ResourceMemory: resource.MustParse(JenkinsSCConfigMEMRequest),
+				corev1.ResourceCPU:    resource.MustParse(SidecarCPURequest),
+				corev1.ResourceMemory: resource.MustParse(SidecarMEMRequest),
 			},
 			Limits: corev1.ResourceList{
-				corev1.ResourceCPU:    resource.MustParse(JenkinsSCConfigCPULimit),
-				corev1.ResourceMemory: resource.MustParse(JenkinsSCConfigMEMLimit),
+				corev1.ResourceCPU:    resource.MustParse(SidecarCPULimit),
+				corev1.ResourceMemory: resource.MustParse(SidecarMEMLimit),
+			},
+		},
+		VolumeMounts: volumeMounts,
+	}
+}
+
+// NewJenkinsSCConfigContainer returns Jenkins side container for config reloading
+func NewJenkinsSCBackupContainer(jenkins *v1alpha2.Jenkins) corev1.Container {
+	envVars := []corev1.EnvVar{
+		{
+			Name: "POD_NAME",
+			ValueFrom: &corev1.EnvVarSource{
+				FieldRef: &corev1.ObjectFieldSelector{
+					FieldPath: "metadata.name",
+				},
+			},
+		},
+		{
+			Name: "WATCH_NAMESPACE",
+			ValueFrom: &corev1.EnvVarSource{
+				FieldRef: &corev1.ObjectFieldSelector{
+					FieldPath: "metadata.namespace",
+				},
+			},
+		},
+	}
+
+	volumeMounts := []corev1.VolumeMount{
+		{
+			Name:      ConfigurationAsCodeVolumeName,
+			MountPath: ConfigurationAsCodeVolumePath,
+			ReadOnly:  false,
+		},
+		{
+			Name:      "jenkins-home",
+			MountPath: getJenkinsHomePath(jenkins),
+			ReadOnly:  true,
+		},
+	}
+
+	return corev1.Container{
+		Name:            JenkinsSCBackupName,
+		Image:           JenkinsSCBackupImage,
+		ImagePullPolicy: corev1.PullAlways,
+		Env:             envVars,
+		Resources: corev1.ResourceRequirements{
+			Requests: corev1.ResourceList{
+				corev1.ResourceCPU:    resource.MustParse(SidecarCPURequest),
+				corev1.ResourceMemory: resource.MustParse(SidecarMEMRequest),
+			},
+			Limits: corev1.ResourceList{
+				corev1.ResourceCPU:    resource.MustParse(SidecarCPULimit),
+				corev1.ResourceMemory: resource.MustParse(SidecarMEMLimit),
 			},
 		},
 		VolumeMounts: volumeMounts,
@@ -416,12 +474,12 @@ func NewJenkinsInitContainer(jenkins *v1alpha2.Jenkins) corev1.Container {
 		Command:         command,
 		Resources: corev1.ResourceRequirements{
 			Requests: corev1.ResourceList{
-				corev1.ResourceCPU:    resource.MustParse(JenkinsSCConfigCPURequest),
-				corev1.ResourceMemory: resource.MustParse(JenkinsSCConfigMEMRequest),
+				corev1.ResourceCPU:    resource.MustParse(SidecarCPURequest),
+				corev1.ResourceMemory: resource.MustParse(SidecarMEMRequest),
 			},
 			Limits: corev1.ResourceList{
-				corev1.ResourceCPU:    resource.MustParse(JenkinsSCConfigCPULimit),
-				corev1.ResourceMemory: resource.MustParse(JenkinsSCConfigMEMLimit),
+				corev1.ResourceCPU:    resource.MustParse(SidecarCPULimit),
+				corev1.ResourceMemory: resource.MustParse(SidecarMEMLimit),
 			},
 		},
 		VolumeMounts: volumeMounts,
@@ -453,6 +511,9 @@ func newContainers(jenkins *v1alpha2.Jenkins) (containers []corev1.Container) {
 	containers = append(containers, NewJenkinsMasterContainer(jenkins))
 	if jenkins.Spec.ConfigurationAsCode.Enabled && jenkins.Spec.ConfigurationAsCode.EnableAutoReload {
 		containers = append(containers, NewJenkinsSCConfigContainer(jenkins))
+	}
+	if jenkins.Spec.Backup.Enabled {
+		containers = append(containers, NewJenkinsSCBackupContainer(jenkins))
 	}
 	for _, container := range jenkins.Spec.Master.Containers[1:] {
 		containers = append(containers, ConvertJenkinsContainerToKubernetesContainer(container))

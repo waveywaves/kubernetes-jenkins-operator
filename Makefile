@@ -17,11 +17,17 @@ manager: generate goimports fmt vet bin ## Build manager binary
 run: generate fmt vet manifests ## Run against the configured Kubernetes cluster in ~/.kube/config. Prepend WATCH_NAMESPACE for single namespace mode.
 	go run ./main.go
 
-install: manifests kustomize ## Install CRDs into a cluster
+install: install-sidecar manifests kustomize ## Install CRDs into a cluster
 	$(KUSTOMIZE) build config/crd | kubectl apply -f -
 
-uninstall: manifests kustomize ## Uninstall CRDs from a cluster
+install-sidecar: ### Run make install inside the sidecar dir
+	(cd cmd/sidecar && make install)
+
+uninstall: uninstall-sidecar manifests kustomize ## Uninstall CRDs from a cluster
 	$(KUSTOMIZE) build config/crd | kubectl delete -f -
+
+uninstall-sidecar: ## Run make uninstall inside the sidecar dir
+	(cd cmd/sidecar && make uninstall)
 
 deploy: manifests kustomize ## Deploy controller in the configured Kubernetes cluster in ~/.kube/config
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
@@ -57,6 +63,11 @@ docker-build: test ## Build the docker image
 docker-push: ## Push the docker image
 	docker push ${IMG}
 
+docker-build-sidecar: ## Build the docker image for Jenkins Sidecar
+	docker build -f sidecar.Dockerfile -t ${SIDECAR_IMG} .
+
+docker-push-sidecar: ## Push the docker image for Jenkins Sidecar
+	docker push ${SIDECAR_IMG}
 
 bundle-build: ## Build the bundle image.
 	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .

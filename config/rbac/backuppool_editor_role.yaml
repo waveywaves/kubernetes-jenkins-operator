@@ -1,0 +1,24 @@
+# permissions for end users to edit backuppools.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: backuppool-editor-role
+rules:
+- apiGroups:
+  - jenkins.io
+  resources:
+  - backuppools
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - jenkins.jenkins.io
+  resources:
+  - backuppools/status
+  verbs:
+  - get

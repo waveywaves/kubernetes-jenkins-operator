@@ -1,0 +1,20 @@
+# permissions for end users to view backuppools.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: backuppool-viewer-role
+rules:
+- apiGroups:
+  - jenkins.io
+  resources:
+  - backuppools
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - jenkins.jenkins.io
+  resources:
+  - backuppools/status
+  verbs:
+  - get

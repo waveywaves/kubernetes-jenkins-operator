@@ -1,0 +1,11 @@
+domain: jenkins.io
+layout: go.kubebuilder.io/v2
+projectName: jenkins-sidecar
+repo: github.com/jenkinsci/kubernetes-operator/cmd/sidecar
+version: 3-alpha
+resources:
+- group: jenkins
+  kind: Backup
+  version: v1alpha2
+plugins:
+  go.sdk.operatorframework.io/v2-alpha: {}

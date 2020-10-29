@@ -36,9 +36,7 @@ spec:
         spec:
           description: BackupWorkerSpec defines the desired state of BackupWorker
           properties:
-            foo:
-              description: Foo is an example field of BackupWorker. Edit BackupWorker_types.go
-                to remove/update
+            jenkinsRef:
               type: string
           type: object
         status:

@@ -46,5 +46,9 @@ func NewJenkinsDeployment(objectMeta metav1.ObjectMeta, jenkins *v1alpha2.Jenkin
 
 // GetJenkinsDeploymentName returns Jenkins deployment name for given CR
 func GetJenkinsDeploymentName(jenkins *v1alpha2.Jenkins) string {
-	return fmt.Sprintf("jenkins-%s", jenkins.Name)
+	return CreateJenkinsDeploymentName(jenkins.Name)
+}
+
+func CreateJenkinsDeploymentName(jenkinsName string) string {
+	return fmt.Sprintf("jenkins-%s", jenkinsName)
 }
